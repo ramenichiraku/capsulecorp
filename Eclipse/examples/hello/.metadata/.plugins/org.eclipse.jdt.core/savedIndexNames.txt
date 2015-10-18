@@ -1,0 +1,25 @@
+INDEX VERSION 1.127+/home/elotro/capsulecorp/Eclipse/example/hello/.metadata/.plugins/org.eclipse.jdt.core
+1513993030.index
+349230358.index
+1259291233.index
+2259717368.index
+3542660237.index
+989528713.index
+1746718603.index
+4286040111.index
+769635717.index
+460152253.index
+67259912.index
+2426646370.index
+2307328643.index
+392775124.index
+2103285932.index
+4066039412.index
+3938652823.index
+3070904283.index
+2598035366.index
+3900037835.index
+3252786621.index
+1783455532.index
+664741535.index
+2743816840.index
