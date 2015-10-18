@@ -15,14 +15,14 @@ integrating tomcat with eclipse:
     rm org.eclipse.wst.server.core.prefs
     cd /usr/share/tomcat7
     sudo service tomcat7 stop
-    sudo update-rc.d tomcat7 disable
-    sudo ln -s /var/lib/tomcat7/conf conf
-    sudo ln -s /etc/tomcat7/policy.d/03catalina.policy conf/catalina.policy
-    sudo ln -s /var/log/tomcat7 log
-    sudo chmod -R 777 /usr/share/tomcat7/conf
-    sudo ln -s /var/lib/tomcat7/common common
-    sudo ln -s /var/lib/tomcat7/server server
-    sudo ln -s /var/lib/tomcat7/shared shared
+    sudo update-rc.d tomcat8 disable
+    sudo ln -s /var/lib/tomcat8/conf conf
+    sudo ln -s /etc/tomcat8/policy.d/03catalina.policy conf/catalina.policy
+    sudo ln -s /var/log/tomcat8 log
+    sudo chmod -R 777 /usr/share/tomcat8/conf
+    sudo ln -s /var/lib/tomcat8/common common
+    sudo ln -s /var/lib/tomcat8/server server
+    sudo ln -s /var/lib/tomcat8/shared shared
 
     – Restart eclipse
     – In Project Explorer of Eclipse, you can see ‘Servers’. Right click and delete it.
