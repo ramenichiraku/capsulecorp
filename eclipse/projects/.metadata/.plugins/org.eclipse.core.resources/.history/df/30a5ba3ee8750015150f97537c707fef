@@ -1,0 +1,8 @@
+package hello;
+
+public class HelloWorld {
+    public void test(String msg)
+     {
+         System.out.println("<h1> Hello WORLD! </h1>");
+     }
+}
