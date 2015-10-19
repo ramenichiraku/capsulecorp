@@ -1,0 +1,14 @@
+package hello;
+
+public class HelloWorld {
+    public String printTitle(String msg)
+    {
+         System.out.println("<h1>"+msg+"</h1>");
+         //out.println ("<h1>"+msg+"</h1>");
+    }
+    
+    public String printText(String msg)
+    {
+         System.out.println("<p>"+msg+"</p>");
+    }
+}
