@@ -1,0 +1,42 @@
+package hello;
+
+import java.io.OutputStream;
+
+import hello.SerialTest.SerialTestSuscriptor;;
+
+public class HelloWorld implements SerialTestSuscriptor {
+	
+	PrintWriter myOutput = null;
+	
+	protected HelloWorld () 
+	{
+		
+	}
+	
+	public HelloWorld (OutputStream o) 
+	{
+		myOutput = o;		
+	}
+	
+    public void printTitle(String msg)
+    {
+    	String texto = "<h1>"+msg+"</h1>";
+    	
+    	myOutput.println(texto);
+        
+        //out.println ("<h1>"+msg+"</h1>");
+    }
+    
+    public void printText(String msg)
+    {
+    	String texto = "<p>"+msg+"</p>";
+    	
+    	myOutput.println(texto);
+    }
+
+	@Override
+	public void newLine(String s) {
+		// TODO Auto-generated method stub
+		
+	}
+}

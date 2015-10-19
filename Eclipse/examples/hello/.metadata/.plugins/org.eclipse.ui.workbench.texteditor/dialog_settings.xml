@@ -13,16 +13,16 @@
 		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="close" key="selection"/>
+		<item value="portId" key="selection"/>
 		<list key="findhistory">
-			<item value="close"/>
-			<item value="main"/>
-			<item value="CommPortIdentifier"/>
 			<item value="portId"/>
-			<item value="could not f"/>
-			<item value="started"/>
-			<item value="PORT_NAMES"/>
-			<item value="could not"/>
+			<item value="rxt"/>
+			<item value="rx"/>
+			<item value="loader"/>
+			<item value="SerialTest"/>
+			<item value="created"/>
+			<item value="initial"/>
+			<item value="inita"/>
 		</list>
 		<list key="replacehistory">
 		</list>

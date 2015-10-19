@@ -2,37 +2,83 @@ package hello;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+//import java.io.OutputStream;
 import gnu.io.CommPortIdentifier; 
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent; 
 import gnu.io.SerialPortEventListener; 
-import java.util.Enumeration;
+//import java.util.Enumeration;
+
 
 
 public class SerialTest implements SerialPortEventListener {
-	SerialPort serialPort;
-        /** The port we're normally going to use. */
+	
+	public interface SerialTestSuscriptor
+	{
+		public void newLine(String s);
+		
+		public void connectionError ();
+	   //Any number of final, static fields
+	   //Any number of abstract method declarations\
+	}
+	
+	SerialTestSuscriptor aSuscriptor = null;
+	
+	static SerialPort serialPort;
+	
+    /** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { 
 			"/dev/tty.usbserial-A9007UX1", // Mac OS X
-                        "/dev/ttyACM0", // Raspberry Pi
+			"/dev/ttyACM0", // Raspberry Pi
 			"/dev/ttyUSB0", // Linux
 			"COM3", // Windows
 	};
+	
 	/**
 	* A BufferedReader which will be fed by a InputStreamReader 
 	* converting the bytes into characters 
 	* making the displayed results codepage independent
 	*/
-	private BufferedReader input;
+	
+	private static BufferedReader input;
 	/** The output stream to the port */
-	private OutputStream output;
+	//private static OutputStream output;
 	/** Milliseconds to block while waiting for port open */
 	private static final int TIME_OUT = 2000;
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 9600;
+	
+	
+	/** 
+	 * Singleton pattern and protected constructor
+	 * */
+	private static SerialTest instance = null;
+	
+	protected SerialTest ()
+	{
+		System.out.println("SerialTest creted");
+		
+	}
+	
+	public static SerialTest getSerialTest ()
+	{		
+		if (instance == null)
+		{
+			System.out.println("Going to create serial test");
+			instance = new SerialTest ();
+		}
+		
+		System.out.println("Going to return SerialTest");
+		
+		return instance;		
+	}
 
-	public void initialize() {
+	/**
+	 * Public methods, all static because it is a singleton 
+	 * 
+	 */
+	public void initialize(SerialTestSuscriptor s) {
+		aSuscriptor = s;
 /*
         // the next line is for Raspberry Pi and 
         // gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
@@ -41,13 +87,12 @@ public class SerialTest implements SerialPortEventListener {
 
 		CommPortIdentifier portId = null;
 		//Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
-		java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
-		
+		java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();		
 
 		System.out.println ("Start looking for ports..");
 		//First, Find an instance of serial port as set in PORT_NAMES.
 		while (portEnum.hasMoreElements()) {
-			CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
+			CommPortIdentifier currPortId = portEnum.nextElement();
 			System.out.println ("Expected name: "+currPortId);
 			for (String portName : PORT_NAMES) {
 				System.out.println("Trying port name: " + portName);
@@ -58,6 +103,7 @@ public class SerialTest implements SerialPortEventListener {
 				}
 			}
 		}
+		
 		if (portId == null) {
 			System.out.println("Could not find COM port.");
 			return;
@@ -65,7 +111,7 @@ public class SerialTest implements SerialPortEventListener {
 
 		try {
 			// open serial port, and use class name for the appName.
-			serialPort = (SerialPort) portId.open(this.getClass().getName(),
+			serialPort = (SerialPort) portId.open(instance.getClass().getName(),
 					TIME_OUT);
 
 			// set port parameters
@@ -76,14 +122,16 @@ public class SerialTest implements SerialPortEventListener {
 
 			// open the streams
 			input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-			output = serialPort.getOutputStream();
+			//output = serialPort.getOutputStream();
 
 			// add event listeners
-			serialPort.addEventListener(this);
+			serialPort.addEventListener(instance);
 			serialPort.notifyOnDataAvailable(true);
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}
+		
+		System.out.println("Initialized");
 	}
 
 	/**
@@ -104,14 +152,19 @@ public class SerialTest implements SerialPortEventListener {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				String inputLine=input.readLine();
-				System.out.println(inputLine);
+				
+				
+				
+				aSuscriptor.newLine(inputLine);
 			} catch (Exception e) {
 				System.err.println(e.toString());
+				aSuscriptor.connectionError();
 			}
 		}
 		// Ignore all the other eventTypes, but you should consider the other ones.
 	}
 
+/*	
 	public static void main(String[] args) throws Exception {
 		SerialTest main = new SerialTest();
 		main.initialize();
@@ -123,6 +176,7 @@ public class SerialTest implements SerialPortEventListener {
 			}
 		};
 		t.start();
-		System.out.println("Started");
+		
 	}
+	*/	
 }

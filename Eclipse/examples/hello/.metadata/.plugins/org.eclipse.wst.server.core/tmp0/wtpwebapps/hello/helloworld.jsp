@@ -21,10 +21,24 @@
 		%>
 		  
 		<% 
-			HelloWorld t = new HelloWorld();
+		
 			
-			out.println (t.printTitle("La ostia de titulo..."));
-			out.println (t.printText("HELLO WORLD!!!"));
+			out.println ("<h1>La ostia de titulo...</h1>");			
+			
+			HelloWorld t = new HelloWorld(out);
+			
+			try {Thread.sleep(3000);} catch (InterruptedException ie) {}
+			
+			t.connectionError();
+		
+			/*
+		    while (!t.isFinished())
+		    {
+		    	try {Thread.sleep(100);} catch (InterruptedException ie) {}		    	
+		    }*/
+		    
+		    out.println ("website is loaded OK from Arduino.");
+			
 			//t.test("Joy");
 		%>
 		
