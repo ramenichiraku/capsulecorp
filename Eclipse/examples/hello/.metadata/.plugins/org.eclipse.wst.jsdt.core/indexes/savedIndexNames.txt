@@ -1,8 +1,0 @@
-INDEX VERSION 1.3+/home/elotro/capsulecorp/Eclipse/examples/hello/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
-250977658.index
-335594668.index
-2677028991.index
-2845583151.index
-3227661871.index
-2371059483.index
-3070904283.index
