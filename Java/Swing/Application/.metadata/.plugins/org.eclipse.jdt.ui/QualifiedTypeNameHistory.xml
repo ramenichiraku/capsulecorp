@@ -5,4 +5,5 @@
 <fullyQualifiedTypeName name="Serial.FrameSerial"/>
 <fullyQualifiedTypeName name="Serial.IFrame"/>
 <fullyQualifiedTypeName name="Serial.IFrame.IFrameSuscriptor"/>
+<fullyQualifiedTypeName name="javax.swing.JLabel"/>
 </qualifiedTypeNameHistroy>

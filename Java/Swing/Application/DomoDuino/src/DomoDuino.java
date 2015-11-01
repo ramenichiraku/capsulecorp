@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
@@ -37,8 +38,13 @@ public class DomoDuino extends JFrame implements IFrameSuscriptor{
 	/**
 	 * Create the frame.
 	 */
+	JButton btnToogleLed;
+	JLabel labelTemperatura;
+	JLabel labelHumedad;
+	JLabel labelLuz;
 	public DomoDuino() {
 		final FrameSerial frame_ = FrameSerial.getInstance();
+		
 		frame_.setOnEvent(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,19 +57,46 @@ public class DomoDuino extends JFrame implements IFrameSuscriptor{
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
 		
-		JButton btnToogleLed = new JButton("Toogle LED");
+		labelTemperatura = new JLabel("1");
+		labelHumedad 	 = new JLabel("7");
+		labelLuz 		 = new JLabel("9");
+		
+		btnToogleLed = new JButton("Toogle LED");
 		btnToogleLed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame_.sendCommand(0, 1);
 			}
 		});
 		panel.add(btnToogleLed);
+		panel.add(labelTemperatura);
+		panel.add(labelHumedad);
+		panel.add(labelLuz);
 		
-		//Thread.sleep();
-		System.out.println("Exit the program");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.out.println("Program is started");
 	}
+	
+final int EVENTO_TEMPERATURA 	= 0;
+final int EVENTO_LUZ 			= 1;
+final int EVENTO_HUMEDAD 		= 2;
 
 	public void remoteEvent(int eventId, int data) {
-		
+		if (eventId == EVENTO_TEMPERATURA)
+		{
+			labelTemperatura.setText("Temp: "+ String.valueOf(data));			
+		}
+		else if (eventId == EVENTO_LUZ)
+		{
+			labelLuz.setText("Luz: " + String.valueOf(data));
+		}
+		else if (eventId == EVENTO_HUMEDAD)
+		{
+			labelHumedad.setText("Humedad: " + String.valueOf(data));
+		}
 	}
 }

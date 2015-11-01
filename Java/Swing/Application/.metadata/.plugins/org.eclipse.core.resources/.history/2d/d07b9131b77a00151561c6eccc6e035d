@@ -1,5 +1,0 @@
-package Serial;
-
-public interface IFrame {
-
-}

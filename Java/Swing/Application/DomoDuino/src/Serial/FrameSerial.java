@@ -22,19 +22,19 @@ public class FrameSerial implements IFrame, SerialPortEventListener {
 	/** 
 	 * Singleton pattern and protected constructor
 	 * */
-	private static FrameSerial instance = null;
+	private static FrameSerial instance_ = null;
 	protected FrameSerial ()
 	{
 		initialize ();
 		System.out.println("SerialManager created");
 	}
 	public static FrameSerial getInstance () {
-		if (instance == null)
+		if (instance_ == null)
 		{
-			instance = new FrameSerial();
+			instance_ = new FrameSerial();
 		}
 		
-		return instance;
+		return instance_;
 	}
 	
 	/// Interfaces implementations
@@ -67,20 +67,33 @@ public class FrameSerial implements IFrame, SerialPortEventListener {
 			try {
 				String inputLine=input.readLine();
 				
-				String[] tokens = inputLine.split(".");
+				//System.out.println("Data recieved: "+ inputLine);
+				
+				String[] tokens = inputLine.split("-");
 				if (tokens.length == 3)
 				{
-					if (tokens[0] == "event")
+					if (tokens[0].equals("event"))
 					{
 						myEvent   = Integer.parseInt(tokens[1]);
 						dataEvent = Integer.parseInt(tokens[2]);
+						
+						System.out.println ("New event recieved: "+myEvent+" data: "+dataEvent);
 					}
 				
+					for (int z = 0; z<suscriptors_.size(); z++)
+					{
+						IFrameSuscriptor s = suscriptors_.get(z);
+						
+						s.remoteEvent(myEvent, dataEvent);
+						
+					}
+					/*
 					IFrameSuscriptor[] array = (IFrameSuscriptor[]) suscriptors_.toArray();
 					
 					for (IFrameSuscriptor str : array) {
 					   str.remoteEvent(myEvent, dataEvent);
 					}
+					*/
 				}
 			} catch (Exception e) {
 				System.err.println(e.toString());
@@ -132,9 +145,10 @@ public class FrameSerial implements IFrame, SerialPortEventListener {
         // gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
         System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM0");
 */
+		
 		CommPortIdentifier portId = null;
 		//Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
-		java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();		
+		java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
 
 		System.out.println ("Start looking for ports..");
 		//First, Find an instance of serial port as set in PORT_NAMES.
@@ -157,7 +171,7 @@ public class FrameSerial implements IFrame, SerialPortEventListener {
 
 		try {
 			// open serial port, and use class name for the appName.
-			serialPort = (SerialPort) portId.open(instance.getClass().getName(),
+			serialPort = (SerialPort) portId.open(this.getClass().getName(),
 					TIME_OUT);
 
 			// set port parameters
@@ -171,7 +185,7 @@ public class FrameSerial implements IFrame, SerialPortEventListener {
 			output = serialPort.getOutputStream();
 
 			// add event listeners
-			serialPort.addEventListener(instance);
+			serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
 		} catch (Exception e) {
 			System.err.println(e.toString());
@@ -197,6 +211,7 @@ public class FrameSerial implements IFrame, SerialPortEventListener {
 			output.write(data.getBytes());
 		} catch (Exception e) {
 			System.out.println("could not write to port");
+			e.printStackTrace();
 		}
 	}
 }
