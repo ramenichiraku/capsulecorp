@@ -42,10 +42,8 @@ public class DomoDuino extends JFrame implements IFrameSuscriptor{
 	JLabel labelTemperatura;
 	JLabel labelHumedad;
 	JLabel labelLuz;
-	int currentLedStatus;
 	public DomoDuino() {
 		final FrameSerial frame_ = FrameSerial.getInstance();
-		currentLedStatus = 0;
 		
 		frame_.setOnEvent(this);
 		
@@ -66,6 +64,7 @@ public class DomoDuino extends JFrame implements IFrameSuscriptor{
 		btnToogleLed = new JButton("Toogle LED");
 		btnToogleLed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				static int currentLedStatus = 0;
 				currentLedStatus = currentLedStatus==0?1:0;
 				frame_.sendCommand(0, currentLedStatus);
 			}

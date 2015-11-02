@@ -50,7 +50,7 @@ public class FrameSerial implements IFrame, SerialPortEventListener {
 	}
 
 	public boolean sendCommand(int command, int parameter) {
-		String data = "c;"+command+";"+parameter;
+		String data = "command."+command+"."+parameter;
 		writeData(data);
 		return true;
 	}
@@ -69,10 +69,10 @@ public class FrameSerial implements IFrame, SerialPortEventListener {
 				
 				//System.out.println("Data recieved: "+ inputLine);
 				
-				String[] tokens = inputLine.split(";");
+				String[] tokens = inputLine.split("-");
 				if (tokens.length == 3)
 				{
-					if (tokens[0].equals("e"))
+					if (tokens[0].equals("event"))
 					{
 						myEvent   = Integer.parseInt(tokens[1]);
 						dataEvent = Integer.parseInt(tokens[2]);

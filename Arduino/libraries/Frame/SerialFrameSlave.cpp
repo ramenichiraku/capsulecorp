@@ -1,46 +1,46 @@
 
 /***************************************************************************************
- *  File: SerialFrame.cpp
+ *  File: SerialFrameSlave.cpp
  *  Name: Zero CrashOverride
  *  Name: eltiempopaso@gmail.com
  *  Description: Serial Frame implementation
  ***************************************************************************************/
 
-#include <SerialFrame/SerialFrame.h>
+#include <SerialFrameSlave/SerialFrameSlave.h>
 
 #ifndef MY_SERIAL
 #define MY_SERIAL Serial
 #endif
 
 
-SerialFrame::SerialFrame ()
+SerialFrameSlave::SerialFrameSlave ()
 {
    nSuscriptors = 0;
 }
 
 
-SerialFrame::SerialFrame (SUSCRIPTOR(z))
+SerialFrameSlave::SerialFrameSlave (SUSCRIPTOR(z))
 {
    nSuscriptors = 0;
 
    setOnCommand (z);
 }
 
-SerialFrame::~SerialFrame ()
+SerialFrameSlave::~SerialFrameSlave ()
 {
 }
 
 // Send event method
 //
-boolean SerialFrame::sendEvent (int id, int data)
+boolean SerialFrameSlave::sendEvent (int id, int data)
 {
-  String myEvent = "event;" + String(id)+";"+String(data);
+  String myEvent = "e;" + String(id)+";"+String(data);
   Serial.println (myEvent);
 }
 
 // Command suscriptions
 //
-boolean SerialFrame::setOnCommand (SUSCRIPTOR(z))
+boolean SerialFrameSlave::setOnCommand (SUSCRIPTOR(z))
 {
   boolean res = false;
   
@@ -54,7 +54,7 @@ boolean SerialFrame::setOnCommand (SUSCRIPTOR(z))
   return res;
 }
 
-boolean SerialFrame::readACommand (int & command, int & data)
+boolean SerialFrameSlave::readACommand (int & command, int & data)
 {
   boolean res = false;
   static char buffer[50];
@@ -99,7 +99,7 @@ boolean SerialFrame::readACommand (int & command, int & data)
     buffer[i] = '\0';
     
     
-    if (String(buffer) == String("command"))
+    if (String(buffer) == String("c"))
     {
       command = atoi(commandChar);
       data    = atoi(dataChar);
@@ -113,7 +113,7 @@ boolean SerialFrame::readACommand (int & command, int & data)
 
 // Check if there are commands available
 //
-void SerialFrame::checkCommands (void)
+void SerialFrameSlave::checkCommands (void)
 {
   int c = 0;
   int d = 0;

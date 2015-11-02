@@ -1,5 +1,5 @@
-#include <Frame.h>
-#include <SerialFrame/SerialFrame.h>
+#include <IFrameSlave.h>
+#include <SerialFrameSlave/SerialFrameSlave.h>
 
 /* commands and events interface */
 /* EVENTS: communication from slave to master */
@@ -8,7 +8,7 @@ const static int EVENTO_LUZ         = 1;
 const static int EVENTO_HUMEDAD     = 2;
 
 /* COMMANDS: communication from master to slave */
-const static int COMMAND_LED        = 0;
+const static int COMMAND_LED          = 0;
 
 
 /*
@@ -23,54 +23,78 @@ The EVENTS temperature, light and humidity are related to local sensors, and an 
 */
 
 
-//int ledPin = 13;
-int current = 0;
+// Local sensors to read and send to host
+//
+static int temperaturePin = 1;
+static int humidityPin    = 2;
+static int lightPin       = 3;
 
-/* Create the SerialFrame object, and suscribe the andale method. */
+// Local variables to store current data
+//
+static int temperatureData = 0;
+static int humidityData = 0;
+static int lightData = 0;
+
+// Led pin controlled from host
+//
+static int ledPin = 13;
+
+// Create the SerialFrame object, and suscribe the andale method used as a callback.
+//
 void andale (int,int);
-SerialFrame frame_ (andale);
+SerialFrameSlave frame_ (andale);
 
-
+// Arduino setup configurations
+//
 void setup ()
 {
-  //pinMode(ledPin, OUTPUT);
+  // Configure pins
+  //
+    /* ATENTION: Analog pins already configured */
+  pinMode(ledPin, OUTPUT);
   
   // Open serial communications and wait for port to open:
   Serial.begin(9600);
   while (!Serial) {
   }; // wait for serial port to connect. Needed for native USB port only
   
+  // Not necessary because already initialized in constructor
+  //
 //  frame_.setOnCommand (andale);
 }
 
+// Arduino loop
+//
 void loop ()
 {
+  // Protocol checks
+  //
   frame_.checkCommands(); 
  
-  if (current == 0)
-  { 
-    frame_.sendEvent (EVENTO_TEMPERATURA, 7);
-  }
-  else if (current == 1)
-  {
-    frame_.sendEvent (EVENTO_HUMEDAD    , 500);
-  }
-  else if (current == 2)
-  {
-    frame_.sendEvent (EVENTO_LUZ        , 100);
-  }
-  
-  delay (5000);
+  // Read sensors
+  //
+  temperatureData = analogRead (temperaturePin);
+  humidityData    = analogRead (humidityPin);
+  lightData       = analogRead (lightPin);
+ 
+  // Send sensors information
+  // 
+  frame_.sendEvent (EVENTO_TEMPERATURA, temperatureData);
+  frame_.sendEvent (EVENTO_HUMEDAD    , humidityData);
+  frame_.sendEvent (EVENTO_LUZ        , lightData);
+
+  // Wait 1 second  
+  //
+  delay (1000);
 }
 
-/* Suscribed method */
+// Suscribed method to SerialFrameSlave, here are the commands received
+//
 void andale (int c,int d)
 {
   Serial.println (String("andale andale!!! comando recibido: ") + String (c) + String(" y dato: ") + String(d));
   if (c == COMMAND_LED)
   {
-    //digitalWrite (ledPin, d==0?0:1);
-    current = d;
-    
+    digitalWrite (ledPin, d==0?0:1);
   }
 }

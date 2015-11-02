@@ -1,16 +1,16 @@
 
 /***************************************************************************************
- *  File: SerialFrame.h
+ *  File: SerialFrameSlave.h
  *  Name: Zero CrashOverride
  *  Name: eltiempopaso@gmail.com
  *  Description: Serial Frame declaration 
  ***************************************************************************************/
 
 
-#ifndef CLASS_SERIAL_FRAME
-#define CLASS_SERIAL_FRAME
+#ifndef CLASS_SERIAL_FRAME_SLAVE
+#define CLASS_SERIAL_FRAME_SLAVE
 
-#include <IFrame.h>
+#include <IFrameSlave.h>
 
 
 #ifndef MAX_SUSCRIPTORS
@@ -18,7 +18,7 @@
 #endif
 
 
-class SerialFrame : public IFrame
+class SerialFrameSlave : public IFrameSlave
 {
   // local definitions
   //
@@ -26,9 +26,9 @@ class SerialFrame : public IFrame
   SUSCRIPTOR(mySuscriptors[MAX_SUSCRIPTORS]);
 
 public:
-  SerialFrame ();
-  SerialFrame (SUSCRIPTOR(z));
-  ~SerialFrame ();
+  SerialFrameSlave ();
+  SerialFrameSlave (SUSCRIPTOR(z));
+  ~SerialFrameSlave ();
 
 public:
   void checkCommands (void);
