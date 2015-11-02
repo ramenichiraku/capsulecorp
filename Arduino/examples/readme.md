@@ -7,6 +7,7 @@ Em sembla bé. Primer commit fet :)
 |------------------------|:--------------------------------------------------------------:|
 |XBee_Serial_Passthrough | 	Com rebre/enviar info a traves del modul xbee amb arduino
 |XBee_Remote_Control	 | 	Mes sobre el modul de xbee ()
+|SerialFrameExample	 | 	Example of how to use commands and events to remotely control leds and sensors
 |???????????		 |	Petit planificador de tasques.  
 
 
