@@ -8,7 +8,8 @@ const static int EVENTO_LUZ         = 1;
 const static int EVENTO_HUMEDAD     = 2;
 
 /* COMMANDS: communication from master to slave */
-const static int COMMAND_LED          = 0;
+const static int COMMAND_LED              = 0;
+const static int COMMAND_ENABLE_SENSORS   = 1;
 
 
 /*
@@ -25,9 +26,9 @@ The EVENTS temperature, light and humidity are related to local sensors, and an 
 
 // Local sensors to read and send to host
 //
-static int temperaturePin = 1;
-static int humidityPin    = 2;
-static int lightPin       = 3;
+const static int temperaturePin = 1;
+const static int humidityPin    = 2;
+const static int lightPin       = 3;
 
 // Local variables to store current data
 //
@@ -35,9 +36,13 @@ static int temperatureData = 0;
 static int humidityData = 0;
 static int lightData = 0;
 
+// Sensors status managed remotely
+//
+boolean sensorsAreEnabled = false;
+
 // Led pin controlled from host
 //
-static int ledPin = 13;
+const static int ledPin = 13;
 
 // Create the SerialFrame object, and suscribe the andale method used as a callback.
 //
@@ -79,9 +84,12 @@ void loop ()
  
   // Send sensors information
   // 
-  frame_.sendEvent (EVENTO_TEMPERATURA, temperatureData);
-  frame_.sendEvent (EVENTO_HUMEDAD    , humidityData);
-  frame_.sendEvent (EVENTO_LUZ        , lightData);
+  if (sensorsAreEnabled)
+  {
+    frame_.sendEvent (EVENTO_TEMPERATURA, temperatureData);
+    frame_.sendEvent (EVENTO_HUMEDAD    , humidityData);
+    frame_.sendEvent (EVENTO_LUZ        , lightData);
+  }
 
   // Wait 1 second  
   //
@@ -96,5 +104,9 @@ void andale (int c,int d)
   if (c == COMMAND_LED)
   {
     digitalWrite (ledPin, d==0?0:1);
+  } 
+  else if (c == COMMAND_ENABLE_SENSORS)
+  {
+    sensorsAreEnabled = d?true:false;
   }
 }

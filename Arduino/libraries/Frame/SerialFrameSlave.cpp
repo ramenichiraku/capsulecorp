@@ -57,57 +57,35 @@ boolean SerialFrameSlave::setOnCommand (SUSCRIPTOR(z))
 boolean SerialFrameSlave::readACommand (int & command, int & data)
 {
   boolean res = false;
-  static char buffer[50];
-  char * commandChar;
-  char * dataChar;
+  String line;
   
   // Check serial information
   //
   byte bytes = MY_SERIAL.available();
-  
-//  assert_non_removable ();
-  
-  // If available data
+
+  // Read type of Frame
   //
-  if (bytes) 
+  line = MY_SERIAL.readStringUntil(';');
+
+  // If a command is received
+  //
+  if (line == "c")
   {
-    int i;
-    for (i=0; i<bytes; i++)
-    {
-      buffer[i] = MY_SERIAL.read();
+      // Retrieve the command number
+      //
+      line = MY_SERIAL.readStringUntil(';');
+      command = atoi(line.c_str());
       
-      //TBD: ACCEPT MORE THAN ONE COMMAND IN THE BUFFER.... (VERY IMPORTANT)
-      if (buffer[i] == '\n')
-      {
-        break;
-      }
-      
-      if (buffer[i] == ';')
-      {
-        if (!commandChar)
-        {
-          commandChar = &buffer[i+1];
-        }
-        else
-        {
-          dataChar  = &buffer[i+1];
-        }
-        
-        buffer[i] = '\0';
-      }
-    }    
-    buffer[i] = '\0';
-    
-    
-    if (String(buffer) == String("c"))
-    {
-      command = atoi(commandChar);
-      data    = atoi(dataChar);
-      
+      // Retrieve the command attached data
+      //
+      line = MY_SERIAL.readStringUntil('\n');
+      data    = atoi(line.c_str());
+
+      // Set the command as received
+      //
       res = true;
-    }
   }
-  
+
   return res;
 }
 
