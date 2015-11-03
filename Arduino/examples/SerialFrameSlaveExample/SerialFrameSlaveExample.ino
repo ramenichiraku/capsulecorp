@@ -1,5 +1,11 @@
-/*
+/***************************************************************************************
+ *  File: SerialFrameSlaveExample.ino
+ *  Name: Zero CrashOverride
+ *  mail: eltiempopaso@gmail.com
+ *  Description: Example of using the FrameSlave over both the Serial and Xbee channels.
+ ***************************************************************************************/
 
+/*
 This is an example of how to use the FrameSlave over serial library, using any the Serial or Xbee chanel.
 
 To configure which serial you are going to use, set SERIAL_IS_XBEE:
@@ -20,29 +26,47 @@ IMPORTANT: This is a FrameSlave example, it means that here commands will be rec
 #include <IFrameSlave.h>
 #include <SerialFrameSlave/SerialFrameSlave.h>
 
-#define SERIAL_IS_XBEE 0
-
 /* commands and events interface */
-/* EVENTS: communication from slave to master */
-const static int EVENTO_TEMPERATURA = 0;
-const static int EVENTO_LUZ         = 1;
-const static int EVENTO_HUMEDAD     = 2;
+/*
+
+  Slave:   Arduino microcontroller running this code.
+  Master:  Host running the java interface as a master.
+
+The COMMANDS:
+1. COMMAND_LED is able to swith ON/OF a local led, remotely.
+2. COMMAND_ENABLE_SENSORS enables/disables the sensor information to be sent.
+
+The EVENTS 
+  temperature, 
+  light
+  humidity 
+  
+Are related to local sensors, and an event is sent to the host when changed.
+
+*/
 
 /* COMMANDS: communication from master to slave */
 const static int COMMAND_LED              = 0;
 const static int COMMAND_ENABLE_SENSORS   = 1;
 
+/* EVENTS: communication from slave to master */
+const static int EVENTO_TEMPERATURA = 0;
+const static int EVENTO_LUZ         = 1;
+const static int EVENTO_HUMEDAD     = 2;
 
-/*
-IMPORTANT: In this example, this is the slave source intended to be executed into an Arduino.
 
-  Slave:   Arduino microcontroller running this code.
-  Master:  Host running the java interface as a master.
+// Select SERIAL channel (Serial or XBee)
+//
+#define SERIAL_IS_XBEE 0
 
-The COMMAND_LED is able to swith ON/OF a local led, remotely.
-The EVENTS temperature, light and humidity are related to local sensors, and an event is sent to the host when changed.
-
-*/
+//Configure Serial channel
+//
+#if SERIAL_IS_XBEE
+static SoftwareSerial XBee(2, 3); // Arduino RX, TX (XBee Dout, Din)
+#define MY_SERIAL XBee
+#else
+#define MY_SERIAL Serial 
+#endif
 
 
 // Local sensors to read and send to host
@@ -68,14 +92,7 @@ const static int ledPin = 13;
 // Create the SerialFrame object, and suscribe the andale method used as a callback.
 //
 void andale (int,int);
-#if SERIAL_IS_XBEE
-static SoftwareSerial XBee(2, 3); // Arduino RX, TX (XBee Dout, Din)
-SerialFrameSlave frame_ ((IFrameSlave::Suscriptor)andale, &XBee);
-#else
-SerialFrameSlave frame_ ((IFrameSlave::Suscriptor)andale, &Serial);
-#endif
-
-//SerialFrameSlave frame_ ((IFrameSlave::Suscriptor)andale, &Serial);
+SerialFrameSlave frame_ ((IFrameSlave::Suscriptor)andale, &MY_SERIAL);
 
 // Arduino setup configurations
 //
@@ -87,17 +104,15 @@ void setup ()
   pinMode(ledPin, OUTPUT);
   
   // Open serial communications and wait for port to open:
-  #if SERIAL_IS_XBEE
-  XBee.begin (9600);
-  #else
-  Serial.begin(9600);
-  while (!Serial) {
+  MY_SERIAL.begin (9600);
+  #if SERIAL_IS_XBEE == 0
+  while (!MY_SERIAL) {
   }; // wait for serial port to connect. Needed for native USB port only
   #endif
-  
-  // Not necessary because already initialized in constructor
+ 
+  // Commented as it is not necessary anymore because already initialized in constructor
   //
-//  frame_.setOnCommand (andale);
+  //  frame_.setOnCommand (andale);
 }
 
 // Arduino loop
@@ -133,11 +148,8 @@ void loop ()
 //IFrameSlave::Suscriptor andale
 void andale (int c,int d)
 {
-  #if SERIAL_IS_XBEE
-  XBee.println (String("andale andale!!! comando recibido: ") + String (c) + String(" y dato: ") + String(d));
-  #else
-  Serial.println (String("andale andale!!! comando recibido: ") + String (c) + String(" y dato: ") + String(d));
-  #endif
+  MY_SERIAL.println (String("andale andale!!! comando recibido: ") + String (c) + String(" y dato: ") + String(d));
+
   if (c == COMMAND_LED)
   {
     digitalWrite (ledPin, d==0?0:1);
