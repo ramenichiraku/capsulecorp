@@ -1,5 +1,26 @@
+/*
+
+This is an example of how to use the FrameSlave over serial library, using any the Serial or Xbee chanel.
+
+To configure which serial you are going to use, set SERIAL_IS_XBEE:
+  - SERIAL_IS_XBEE=1 => XBee is going to be used for all serial communication
+  - SERIAL_IS_XBEE=0 => Normal serial is going to be used for serial communication
+
+Once you have chosen the serial port, you need to define the Frame interface that you are going to use. It means to define:
+  - COMMANDS: Messages from Master to Slave
+  - EVENTS:   Messages from Slave to Master
+  
+IMPORTANT: This is a FrameSlave example, it means that here commands will be received and events will be sent.
+
+*/
+
+/* libraries dependencies */
+#include <SoftwareSerial.h>
+
 #include <IFrameSlave.h>
 #include <SerialFrameSlave/SerialFrameSlave.h>
+
+#define SERIAL_IS_XBEE 0
 
 /* commands and events interface */
 /* EVENTS: communication from slave to master */
@@ -47,7 +68,14 @@ const static int ledPin = 13;
 // Create the SerialFrame object, and suscribe the andale method used as a callback.
 //
 void andale (int,int);
-SerialFrameSlave frame_ (andale);
+#if SERIAL_IS_XBEE
+static SoftwareSerial XBee(2, 3); // Arduino RX, TX (XBee Dout, Din)
+SerialFrameSlave frame_ ((IFrameSlave::Suscriptor)andale, &XBee);
+#else
+SerialFrameSlave frame_ ((IFrameSlave::Suscriptor)andale, &Serial);
+#endif
+
+//SerialFrameSlave frame_ ((IFrameSlave::Suscriptor)andale, &Serial);
 
 // Arduino setup configurations
 //
@@ -59,9 +87,13 @@ void setup ()
   pinMode(ledPin, OUTPUT);
   
   // Open serial communications and wait for port to open:
+  #if SERIAL_IS_XBEE
+  XBee.begin (9600);
+  #else
   Serial.begin(9600);
   while (!Serial) {
   }; // wait for serial port to connect. Needed for native USB port only
+  #endif
   
   // Not necessary because already initialized in constructor
   //
@@ -98,9 +130,14 @@ void loop ()
 
 // Suscribed method to SerialFrameSlave, here are the commands received
 //
+//IFrameSlave::Suscriptor andale
 void andale (int c,int d)
 {
+  #if SERIAL_IS_XBEE
+  XBee.println (String("andale andale!!! comando recibido: ") + String (c) + String(" y dato: ") + String(d));
+  #else
   Serial.println (String("andale andale!!! comando recibido: ") + String (c) + String(" y dato: ") + String(d));
+  #endif
   if (c == COMMAND_LED)
   {
     digitalWrite (ledPin, d==0?0:1);

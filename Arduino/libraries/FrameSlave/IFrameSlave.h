@@ -9,11 +9,13 @@
 #define CLASS_FRAME_SLAVE
 
 #include <Arduino.h>
+#include <SoftwareSerial.h>
 
-#define SUSCRIPTOR(s) void (*s)(int,int)
 
 class IFrameSlave
 {
+public:
+  typedef void (*Suscriptor)(int,int);
 
 public:
 
@@ -21,7 +23,7 @@ public:
     
   virtual boolean sendEvent (int id, int data) = 0;
   
-  virtual boolean setOnCommand (SUSCRIPTOR(z)) = 0;
+  virtual boolean setOnCommand (IFrameSlave::Suscriptor) = 0;
 };
 
 #endif  /* CLASS_FRAME */

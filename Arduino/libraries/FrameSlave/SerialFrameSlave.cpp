@@ -8,10 +8,6 @@
 
 #include <SerialFrameSlave/SerialFrameSlave.h>
 
-#ifndef MY_SERIAL
-#define MY_SERIAL Serial
-#endif
-
 
 SerialFrameSlave::SerialFrameSlave ()
 {
@@ -19,11 +15,14 @@ SerialFrameSlave::SerialFrameSlave ()
 }
 
 
-SerialFrameSlave::SerialFrameSlave (SUSCRIPTOR(z))
+SerialFrameSlave::SerialFrameSlave (IFrameSlave::Suscriptor s, Stream * aStream)
 {
    nSuscriptors = 0;
 
-   setOnCommand (z);
+   setOnCommand (s);
+
+   serial_ = aStream;
+
 }
 
 SerialFrameSlave::~SerialFrameSlave ()
@@ -40,13 +39,13 @@ boolean SerialFrameSlave::sendEvent (int id, int data)
 
 // Command suscriptions
 //
-boolean SerialFrameSlave::setOnCommand (SUSCRIPTOR(z))
+boolean SerialFrameSlave::setOnCommand (IFrameSlave::Suscriptor s)
 {
   boolean res = false;
   
   if (nSuscriptors < MAX_SUSCRIPTORS)
   {
-    mySuscriptors[nSuscriptors] = z;
+    mySuscriptors[nSuscriptors] = s;
     nSuscriptors++;
     res = true;
   }
@@ -61,11 +60,11 @@ boolean SerialFrameSlave::readACommand (int & command, int & data)
   
   // Check serial information
   //
-  byte bytes = MY_SERIAL.available();
+  byte bytes = Serial.available();
 
   // Read type of Frame
   //
-  line = MY_SERIAL.readStringUntil(';');
+  line = serial_->readStringUntil(';');
 
   // If a command is received
   //
@@ -73,12 +72,12 @@ boolean SerialFrameSlave::readACommand (int & command, int & data)
   {
       // Retrieve the command number
       //
-      line = MY_SERIAL.readStringUntil(';');
+      line = serial_->readStringUntil(';');
       command = atoi(line.c_str());
       
       // Retrieve the command attached data
       //
-      line = MY_SERIAL.readStringUntil('\n');
+      line = serial_->readStringUntil('\n');
       data    = atoi(line.c_str());
 
       // Set the command as received

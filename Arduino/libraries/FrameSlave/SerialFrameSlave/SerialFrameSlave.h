@@ -20,14 +20,11 @@
 
 class SerialFrameSlave : public IFrameSlave
 {
-  // local definitions
-  //
-  unsigned nSuscriptors = 0;
-  SUSCRIPTOR(mySuscriptors[MAX_SUSCRIPTORS]);
+private:
+  SerialFrameSlave();
 
 public:
-  SerialFrameSlave ();
-  SerialFrameSlave (SUSCRIPTOR(z));
+  SerialFrameSlave (IFrameSlave::Suscriptor s, Stream * aStream);
   ~SerialFrameSlave ();
 
 public:
@@ -35,10 +32,20 @@ public:
     
   boolean sendEvent (int id, int data);
   
-  boolean setOnCommand (SUSCRIPTOR(z));
+  boolean setOnCommand (IFrameSlave::Suscriptor s);
 private:
     
   boolean readACommand (int & command, int & data);
+
+
+private:
+  // local definitions
+  //
+  unsigned nSuscriptors = 0;
+  IFrameSlave::Suscriptor mySuscriptors[MAX_SUSCRIPTORS];
+
+  Stream * serial_;
+
 };
 
 #endif  /* CLASS_SERIAL_FRAME */
