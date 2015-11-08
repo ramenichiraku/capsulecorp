@@ -1,3 +1,4 @@
-INDEX VERSION 1.127+/home/elotro/capsulecorp/Java/Swing/Examples/SocketDate/.metadata/.plugins/org.eclipse.jdt.core
+INDEX VERSION 1.127+/home/elotro/capsulecorp/Java/Swing/Examples/SocketsWorkspace/.metadata/.plugins/org.eclipse.jdt.core
 783732422.index
+379596279.index
 4046821180.index
