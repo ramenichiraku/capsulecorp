@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="Serial.SerialManager"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="Serial.FrameSerial"/>
 <fullyQualifiedTypeName name="Serial.IFrame"/>
 <fullyQualifiedTypeName name="Serial.IFrame.IFrameSuscriptor"/>
 <fullyQualifiedTypeName name="javax.swing.JLabel"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="Frame.IFrame.IFrameSuscriptor"/>
+<fullyQualifiedTypeName name="Message.IMessageMaster.IMessageMasterSuscriptor"/>
+<fullyQualifiedTypeName name="Frame.IFrame"/>
+<fullyQualifiedTypeName name="Message.MessageMaster"/>
 </qualifiedTypeNameHistroy>

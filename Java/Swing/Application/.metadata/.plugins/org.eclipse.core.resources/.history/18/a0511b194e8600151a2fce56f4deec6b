@@ -1,0 +1,12 @@
+/**
+ * 
+ */
+package Frame;
+
+/**
+ * @author elotro
+ *
+ */
+public abstract class IFrameMaster {
+
+}

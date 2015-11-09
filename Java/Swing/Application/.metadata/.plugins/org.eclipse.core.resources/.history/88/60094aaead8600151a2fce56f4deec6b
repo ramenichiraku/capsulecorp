@@ -1,0 +1,11 @@
+package Message;
+
+public interface IMessage {
+	
+	public interface IMessageSuscriptor {
+		abstract public void dataAvailable (String data);
+	}
+	
+	abstract public void setOnEvent (IMessageSuscriptor subscriptor);
+
+}

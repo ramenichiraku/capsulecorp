@@ -1,0 +1,13 @@
+package Message;
+
+import Message.IMessage.IMessageSuscriptor;
+
+public interface IMessageMaster {
+	
+	public interface IMessageSuscriptor {
+		abstract public void dataAvailable (String data);
+	}
+	
+	abstract public void setOnEvent (IMessageSuscriptor subscriptor);
+
+}

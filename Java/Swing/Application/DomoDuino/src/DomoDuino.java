@@ -5,13 +5,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Frame.IFrame;
+import Frame.FrameSerial;
+import Message.MessageMaster;
+import Message.IMessageMaster.IMessageMasterSuscriptor;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import Serial.FrameSerial;
-import Serial.IFrame.IFrameSuscriptor;
 
-public class DomoDuino extends JFrame implements IFrameSuscriptor{
+public class DomoDuino extends JFrame implements IMessageMasterSuscriptor{
 
 	/**
 	 * 
@@ -44,7 +48,8 @@ public class DomoDuino extends JFrame implements IFrameSuscriptor{
 	JLabel labelLuz;
 	int currentLedStatus;
 	public DomoDuino() {
-		final FrameSerial frame_ = FrameSerial.getInstance();
+		final MessageMaster frame_ = new MessageMaster(FrameSerial.getInstance());
+		
 		currentLedStatus = 0;
 		
 		frame_.setOnEvent(this);

@@ -1,0 +1,11 @@
+package Frame;
+
+public abstract class FrameMasterCommon {
+
+	
+	public boolean sendCommand(int command, int parameter) {
+		String data = "c;"+command+";"+parameter;
+		writeData(data);
+		return true;
+	}
+}

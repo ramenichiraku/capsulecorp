@@ -1,0 +1,38 @@
+package Frame;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import gnu.io.SerialPortEvent;
+
+public abstract class FrameMasterCommon {
+
+	private List<IFrameSuscriptor> suscriptors_ = new ArrayList<IFrameSuscriptor>();
+	/* 
+	 * IFrame methods 
+	 * */
+	public void setOnEvent(IFrameSuscriptor subscriptor) {
+		if (!suscriptors_.contains(subscriptor))
+		{
+			suscriptors_.add(subscriptor);
+		}
+	}
+	
+	public abstract void writeData(String data);
+	
+	public boolean sendCommand(int command, int parameter) {
+		String data = "c;"+command+";"+parameter;
+		writeData(data);
+		return true;
+	}
+	
+	public synchronized void eventReceived (int myEvent, int myData)
+	{
+		for (int z = 0; z<suscriptors_.size(); z++)
+		{
+			IFrameSuscriptor s = suscriptors_.get(z);
+			
+			s.remoteEvent(myEvent, myData);
+		}	
+	}
+}

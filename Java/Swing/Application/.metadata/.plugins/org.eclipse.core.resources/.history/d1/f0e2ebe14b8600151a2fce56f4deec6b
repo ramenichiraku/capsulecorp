@@ -1,0 +1,59 @@
+package Frame;
+
+import java.net.ServerSocket;
+import java.io.IOException;
+/*
+import java.io.BufferedReader;
+
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+
+import java.net.Socket;
+import java.util.Date;
+*/
+
+
+public class FrameSocket implements IFrame {
+	
+	/// Constructor
+	/** 
+	 * Singleton pattern and protected constructor
+	 * */
+	private static FrameSocket instance_ = null;
+	protected FrameSocket ()
+	{
+		System.out.println("SocketManager created");
+	}
+	public static FrameSerial getInstance () {
+		if (instance_ == null)
+		{
+			instance_ = new FrameSerial();
+		}
+		
+		return instance_;
+	}
+	
+	ServerSocket listener_; 
+	
+	FrameSocket (int port)  throws IOException  {
+		listener_ = new ServerSocket(port);	
+	}
+
+	@Override
+	public void setOnEvent(IFrameSuscriptor subscriptor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean sendCommand(int command, int parameter) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean sendEvent(int event, int prameter) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+}

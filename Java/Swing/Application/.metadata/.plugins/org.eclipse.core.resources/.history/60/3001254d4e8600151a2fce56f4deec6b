@@ -1,0 +1,13 @@
+package Frame;
+
+import Frame.IFrame.IFrameSuscriptor;
+
+public interface IFrameSlave{
+
+	
+	abstract public void setOnEvent (IFrameSuscriptor subscriptor);
+	
+	abstract public boolean sendCommand (int command,int parameter);
+	
+	abstract public boolean sendEvent (int event, int prameter);
+}
