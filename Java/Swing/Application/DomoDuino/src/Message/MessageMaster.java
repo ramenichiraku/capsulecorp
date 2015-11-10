@@ -33,10 +33,15 @@ public class MessageMaster implements IMessageMaster, IFrameSuscriptor {
 		myFrame.write(data);
 	}
 	
-	/* this method must be called by inherited classes */
 	protected void eventReceived (int myEvent, int myData)
 	{
 		System.out.println ("New event recieved: "+myEvent+" data: "+myData);
+		for (int z = 0; z<suscriptors_.size(); z++)
+		{
+			IMessageMasterSuscriptor s = suscriptors_.get(z);
+			
+			s.remoteEvent(myEvent, myData);
+		}
 	}
 	
 	/* 

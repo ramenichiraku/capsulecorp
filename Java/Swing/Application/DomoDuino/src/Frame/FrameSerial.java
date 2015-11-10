@@ -91,12 +91,16 @@ public class FrameSerial implements IFrame, SerialPortEventListener {
 		// Ignore all the other eventTypes, but you should consider the other ones.
 	}
 	
-	@Override
 	public void write(String data) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Sent: " + data);
+		try {
+			output.write(data.getBytes());
+		} catch (Exception e) {
+			System.out.println("could not write to port");
+			e.printStackTrace();
+		}
 	}
-	@Override
+	
 	public void setOnDataAvailable(IFrameSuscriptor s) {
 		if (!suscriptors_.contains(s))
 		{

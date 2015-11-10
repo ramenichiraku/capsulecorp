@@ -6,7 +6,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Frame.IFrame;
 import Frame.FrameSerial;
 import Message.MessageMaster;
 import Message.IMessageMaster.IMessageMasterSuscriptor;
