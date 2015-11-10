@@ -1,0 +1,62 @@
+package Frame;
+
+import java.net.ServerSocket;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
+import java.io.BufferedReader;
+
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+
+
+
+public class FrameClientSocket implements IFrame {
+	private List<IFrameSuscriptor > suscriptors_ = new ArrayList<IFrameSuscriptor>();
+	private String serverAddress_;
+	private int serverPort_;
+	
+	FrameClientSocket (String addr, int port) {
+		serverAddress_ = addr;
+		serverPort_ = port;
+	}
+	
+	private Socket socket_;
+	BufferedReader input_; 
+	
+	void open (int address, int port) throws IOException
+	{
+		socket_ = new Socket (serverAddress_, serverPort_);
+		input_  = new BufferedReader(new InputStreamReader(socket_.getInputStream()));
+		//output_ = 		
+	}
+	
+	void close () throws IOException
+	{
+	}
+	/* IFrame methods*/
+
+	public void write(String data) {
+		// write to output
+	}
+
+	public void setOnDataAvailable(IFrameSuscriptor s) {
+		if (!suscriptors_.contains(s))
+		{
+			suscriptors_.add(s);
+		}
+	}
+
+	protected void notifySuscriptors (String data)
+	{
+		for (int z = 0; z<suscriptors_.size(); z++)
+		{
+			IFrameSuscriptor s = suscriptors_.get(z);
+			
+			s.dataAvailable(data);
+		}
+	}
+
+}
