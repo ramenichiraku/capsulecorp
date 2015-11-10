@@ -12,18 +12,22 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 
-
 public class FrameServerSocket implements IFrame, Runnable {
 	private List<IFrameSuscriptor > suscriptors_ = new ArrayList<IFrameSuscriptor>();
 	
+	
 	/// Constructor
+	FrameServerSocket (int port) {
+		myPort_ = port;
+	}
 	private ServerSocket listener_;
 	private Socket socket_;
+	private int myPort_;
 	
-	BufferedReader inputBuffer_;
-    PrintWriter    outputBuffer_;
+	private BufferedReader inputBuffer_;
+    private PrintWriter    outputBuffer_;
 	
-	void open (int port) throws IOException
+	private void openConnection (int port) throws IOException
 	{
 		listener_ = new ServerSocket(port);
 		socket_   = listener_.accept();		
@@ -32,13 +36,13 @@ public class FrameServerSocket implements IFrame, Runnable {
 		outputBuffer_= new PrintWriter(socket_.getOutputStream(), true);
 	}
 	
-	void close () throws IOException
+	private void closeConnection () throws IOException
 	{
 		socket_.close();
 		listener_.close();
 	}
+	
 	/* IFrame methods*/
-
 	public void write(String data) {
 		outputBuffer_.write(data);
 	}
@@ -60,8 +64,16 @@ public class FrameServerSocket implements IFrame, Runnable {
 		}
 	}
 
+	/* Runnable methods */
 	public void run() {
-		while (true)
+		boolean finished = false;
+		try {
+			openConnection (myPort_);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		while (!finished)
 		{
 			try {
 				String line = null;
@@ -72,5 +84,12 @@ public class FrameServerSocket implements IFrame, Runnable {
 				e.printStackTrace();
 			}	
 		}
+		
+		// these lines will never be executed
+		try {
+			closeConnection();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
 	}
 }
