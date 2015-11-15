@@ -1,7 +1,7 @@
 
-int analogPin = 0;
+int analogPin = 5;
 int redLedPin = 13;
-int greenLedPin = 12;
+int greenLedPin = 11;
 
 int light=150;//Intervalo de luz. Testear y cambiarlo por el de vuestro entorno
 
