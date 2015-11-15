@@ -1,0 +1,5 @@
+package Frame;
+
+public interface IFrameTransmitter {
+
+}

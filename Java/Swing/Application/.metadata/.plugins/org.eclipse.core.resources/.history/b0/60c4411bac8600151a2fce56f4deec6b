@@ -1,0 +1,10 @@
+package Frame;
+
+import Frame.IFrameSuscriptor;
+
+public interface IFrameMaster {
+	
+	abstract public void setOnEvent (IFrameSuscriptor subscriptor);
+	
+	abstract public boolean sendCommand (int command,int parameter);
+}

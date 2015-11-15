@@ -1,0 +1,12 @@
+package Message;
+
+public interface IMessageMaster {
+	
+	public interface IMessageMasterSuscriptor {
+		abstract public void eventAvailable (int eventId, int data);
+	}
+	
+	abstract public void setOnEvent (IMessageMasterSuscriptor subscriptor);
+	
+	abstract public void sendCommand (int aCommand, int data);
+}

@@ -1,0 +1,39 @@
+package Message;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import Frame.IFrameSuscriptor;
+
+public abstract class FrameMasterCommon {
+
+	private List<IFrameSuscriptor> suscriptors_ = new ArrayList<IFrameSuscriptor>();
+	/* 
+	 * IFrame methods 
+	 * */
+	public void setOnEvent(IFrameSuscriptor subscriptor) {
+		if (!suscriptors_.contains(subscriptor))
+		{
+			suscriptors_.add(subscriptor);
+		}
+	}
+	
+	
+	
+	public boolean sendCommand(int command, int parameter) {
+		String data = "c;"+command+";"+parameter;
+		writeData(data);
+		return true;
+	}
+	
+	/* this method must be called by inherited classes */
+	protected synchronized void eventReceived (int myEvent, int myData)
+	{
+
+	}
+	
+	/* abstract methods */
+	
+	
+	//protected abstract void dataAvailable (String data);
+}

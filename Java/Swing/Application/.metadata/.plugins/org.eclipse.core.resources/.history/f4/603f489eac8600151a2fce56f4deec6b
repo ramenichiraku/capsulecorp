@@ -1,0 +1,59 @@
+package Frame;
+
+import java.net.ServerSocket;
+import java.io.IOException;
+import java.net.Socket;
+
+import Message.IFrameMaster;
+import Message.IFrameSlave;
+
+import java.io.BufferedReader;
+
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+
+
+
+public class FrameSocket implements IFrameMaster, IFrameSlave {
+	
+	/// Constructor
+	private ServerSocket listener_;
+	private Socket socket_;
+	
+	BufferedReader inputBuffer_;
+    PrintWriter    outputBuffer_;
+	
+	void open (int port) throws IOException
+	{
+		listener_ = new ServerSocket(port);
+		socket_   = listener_.accept();		
+		
+		inputBuffer_ = new BufferedReader(new InputStreamReader(socket_.getInputStream()));
+		outputBuffer_= new PrintWriter(socket_.getOutputStream(), true);
+	}
+	
+	void close () throws IOException
+	{
+		socket_.close();
+		listener_.close();
+	}
+		
+	
+	@Override
+	public void setOnEvent(IFrameSuscriptor subscriptor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean sendCommand(int command, int parameter) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean sendEvent(int event, int prameter) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+}

@@ -1,0 +1,12 @@
+package Frame;
+
+public interface IFrameTransmitter {
+	public interface IFrameSuscriptor
+	{
+		abstract public void received (String data);
+	}
+	
+	public abstract void write(String data);
+	
+	public abstract void setOnReceivedString ();
+}

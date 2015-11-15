@@ -1,0 +1,35 @@
+package Message;
+
+import java.util.List;
+import java.util.ArrayList;
+
+public class MessageMaster implements IMessageMaster {
+	private List<IMessageMasterSuscriptor> suscriptors_ = new ArrayList<IMessageMasterSuscriptor>();
+	/* 
+	 * IFrame methods 
+	 * */
+	public void setOnEvent(IMessageMasterSuscriptor subscriptor) {
+		if (!suscriptors_.contains(subscriptor))
+		{
+			suscriptors_.add(subscriptor);
+		}
+	}	
+	
+	public void sendCommand(int command, int parameter) {
+		String data = "c;"+command+";"+parameter;
+		//writeData(data);
+	}
+	
+	/* this method must be called by inherited classes */
+	protected synchronized void eventReceived (int myEvent, int myData)
+	{
+
+	}
+	
+	/* abstract methods */
+	
+	
+	//protected abstract void dataAvailable (String data);
+}
+
+

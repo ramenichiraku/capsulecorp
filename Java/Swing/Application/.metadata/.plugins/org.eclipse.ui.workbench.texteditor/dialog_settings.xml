@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="322" key="DIALOG_WIDTH"/>
+		<item value="326" key="DIALOG_WIDTH"/>
 		<item value="150" key="DIALOG_Y_ORIGIN"/>
-		<item value="403" key="DIALOG_HEIGHT"/>
+		<item value="406" key="DIALOG_HEIGHT"/>
 		<item value="619" key="DIALOG_X_ORIGIN"/>
 		<item value="1|Sans|10.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 	</section>
@@ -13,18 +13,20 @@
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="Event" key="selection"/>
+		<item value="open" key="selection"/>
 		<list key="findhistory">
-			<item value="event"/>
-			<item value="command"/>
+			<item value="open"/>
+			<item value="FrameSocket"/>
+			<item value="inputBuffer_"/>
 			<item value="suscriptors_"/>
-			<item value="tokens.l"/>
-			<item value="reciev"/>
-			<item value="initia"/>
+			<item value="write"/>
 			<item value="output"/>
-			<item value="could not"/>
+			<item value="IFrameTransmitterSuscriptor"/>
+			<item value="writeData"/>
 		</list>
 		<list key="replacehistory">
+			<item value="FrameServerSocket"/>
+			<item value="IFrameSuscriptor"/>
 			<item value="SerialManager"/>
 		</list>
 	</section>

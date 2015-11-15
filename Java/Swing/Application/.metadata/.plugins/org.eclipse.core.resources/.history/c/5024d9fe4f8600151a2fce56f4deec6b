@@ -1,0 +1,75 @@
+package Frame;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import gnu.io.SerialPortEvent;
+
+public abstract class FrameMasterCommon {
+
+	private List<IFrameSuscriptor> suscriptors_ = new ArrayList<IFrameSuscriptor>();
+	/* 
+	 * IFrame methods 
+	 * */
+	public void setOnEvent(IFrameSuscriptor subscriptor) {
+		if (!suscriptors_.contains(subscriptor))
+		{
+			suscriptors_.add(subscriptor);
+		}
+	}
+	
+	public abstract void writeData(String data);
+	
+	public boolean sendCommand(int command, int parameter) {
+		String data = "c;"+command+";"+parameter;
+		writeData(data);
+		return true;
+	}
+	
+	public synchronized void eventReceived ()
+	{
+	
+	}
+	
+	/* 
+	 * SerialPortEventListener methods 
+	 * */
+	/**
+	 * Handle an event on the serial port. Read the data and print it.
+	 */
+	public synchronized void serialEvent(SerialPortEvent oEvent) {
+		int myEvent = 0, dataEvent = 0;
+		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+			try {
+				String inputLine=input.readLine();
+				
+				//System.out.println("Data recieved: "+ inputLine);
+				
+				String[] tokens = inputLine.split(";");
+				if (tokens.length == 3)
+				{
+					if (tokens[0].equals("e"))
+					{
+						myEvent   = Integer.parseInt(tokens[1]);
+						dataEvent = Integer.parseInt(tokens[2]);
+						
+						System.out.println ("New event recieved: "+myEvent+" data: "+dataEvent);
+					}
+				
+					
+					/*
+					IFrameSuscriptor[] array = (IFrameSuscriptor[]) suscriptors_.toArray();
+					
+					for (IFrameSuscriptor str : array) {
+					   str.remoteEvent(myEvent, dataEvent);
+					}
+					*/
+				}
+			} catch (Exception e) {
+				System.err.println(e.toString());
+				//aSuscriptor.connectionError();
+			}
+		}
+		// Ignore all the other eventTypes, but you should consider the other ones.
+	}
+}
