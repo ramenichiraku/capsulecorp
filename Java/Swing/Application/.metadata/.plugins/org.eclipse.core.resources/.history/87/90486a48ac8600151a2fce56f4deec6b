@@ -1,7 +1,0 @@
-package Frame;
-
-public interface IFrameSuscriptor
-{
-	abstract public void remoteEvent (int eventId, int data);
-	
-}

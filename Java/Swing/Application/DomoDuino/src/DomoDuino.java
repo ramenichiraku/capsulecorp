@@ -6,15 +6,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Frame.FrameSerial;
-import Message.MessageMaster;
-import Message.IMessageMaster.IMessageMasterSuscriptor;
+import Dynatac.Bus.DynatacBusSerial;
+import Dynatac.Protocol.DynatacProtocol;
+import Dynatac.Protocol.IDynatacProtocolMaster;
+import Dynatac.Protocol.IDynatacProtocolMaster.IDynatacProtocolMasterSuscriptor;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class DomoDuino extends JFrame implements IMessageMasterSuscriptor{
+public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscriptor{
 
 	/**
 	 * 
@@ -47,11 +48,11 @@ public class DomoDuino extends JFrame implements IMessageMasterSuscriptor{
 	JLabel labelLuz;
 	int currentLedStatus;
 	public DomoDuino() {
-		final MessageMaster frame_ = new MessageMaster(FrameSerial.getInstance());
+	final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(DynatacBusSerial.getInstance());
 		
 		currentLedStatus = 0;
 		
-		frame_.setOnEvent(this);
+		dynatac_.setOnEvent(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -71,7 +72,7 @@ public class DomoDuino extends JFrame implements IMessageMasterSuscriptor{
 		btnToogleLed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentLedStatus = currentLedStatus==0?1:0;
-				frame_.sendCommand(0, currentLedStatus);
+				dynatac_.sendCommand(0, currentLedStatus);
 			}
 		});
 		panel.add(btnToogleLed);

@@ -1,6 +1,0 @@
-package Frame;
-
-public interface IFrameTransmitter {
-	public abstract void writeData(String data);
-
-}

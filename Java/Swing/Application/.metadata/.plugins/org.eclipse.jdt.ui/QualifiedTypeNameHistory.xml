@@ -11,4 +11,5 @@
 <fullyQualifiedTypeName name="Message.IMessageMaster.IMessageMasterSuscriptor"/>
 <fullyQualifiedTypeName name="Frame.IFrame"/>
 <fullyQualifiedTypeName name="Message.MessageMaster"/>
+<fullyQualifiedTypeName name="Dynatac.Protocol.IDynatacProtocolMaster"/>
 </qualifiedTypeNameHistroy>

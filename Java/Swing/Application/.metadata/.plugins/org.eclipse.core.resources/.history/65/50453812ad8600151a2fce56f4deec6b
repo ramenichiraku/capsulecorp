@@ -1,7 +1,0 @@
-package Message;
-
-public interface IMessageSlave{
-	abstract public void setOnEvent (IFrameSuscriptor subscriptor);
-	
-	abstract public boolean sendEvent (int event, int prameter);
-}

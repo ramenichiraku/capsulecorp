@@ -1,9 +1,0 @@
-package Frame;
-
-public interface IFrameSuscriptor
-{
-	abstract public void remoteEvent (int eventId, int data);
-	
-   //Any number of final, static fields
-   //Any number of abstract method declarations\
-}

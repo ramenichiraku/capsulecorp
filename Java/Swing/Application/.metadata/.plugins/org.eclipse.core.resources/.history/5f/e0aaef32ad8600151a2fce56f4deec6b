@@ -1,6 +1,0 @@
-package Message;
-
-public interface IMessage {
-	abstract public void setOnEvent (IMessageSuscriptor subscriptor);
-
-}
