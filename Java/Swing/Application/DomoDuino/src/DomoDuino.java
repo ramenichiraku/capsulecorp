@@ -7,12 +7,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Dynatac.Bus.DynatacBusSerial;
+import Dynatac.Bus.DynatacBusServerSocket;
 import Dynatac.Protocol.DynatacProtocol;
 import Dynatac.Protocol.IDynatacProtocolMaster;
 import Dynatac.Protocol.IDynatacProtocolMaster.IDynatacProtocolMasterSuscriptor;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscriptor{
@@ -48,10 +50,23 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 	JLabel labelLuz;
 	int currentLedStatus;
 	public DomoDuino() {
-	final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(DynatacBusSerial.getInstance());
-		
 		currentLedStatus = 0;
 		
+		final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(DynatacBusSerial.getInstance());
+			
+		/*
+		DynatacBusServerSocket server_ = new DynatacBusServerSocket();
+		
+		try {
+			server_.startServer(9090);
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		
+		final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(server_);
+		*/
 		dynatac_.setOnEvent(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

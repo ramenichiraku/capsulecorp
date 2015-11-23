@@ -12,4 +12,6 @@
 <fullyQualifiedTypeName name="Frame.IFrame"/>
 <fullyQualifiedTypeName name="Message.MessageMaster"/>
 <fullyQualifiedTypeName name="Dynatac.Protocol.IDynatacProtocolMaster"/>
+<fullyQualifiedTypeName name="java.io.PrintStream"/>
+<fullyQualifiedTypeName name="java.io.DataInputStream"/>
 </qualifiedTypeNameHistroy>

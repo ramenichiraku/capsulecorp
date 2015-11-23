@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.io.BufferedReader;
-
+import java.io.DataInputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 
 
@@ -17,14 +18,16 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 	
 	
 	/// Constructor
-	DynatacBusServerSocket () {
+	public DynatacBusServerSocket () {
 	}
 
+	private boolean serverIsStarted_;
 	private ServerSocket listener_;
 	private Socket socket_;
 	
-	private BufferedReader inputBuffer_;
-	private PrintWriter    outputBuffer_;
+	//private BufferedReader inputBuffer_;
+	private BufferedReader inputBuffer_ = null;
+	private PrintStream    outputBuffer_ = null;
 
 	public void startServer (int myPort) throws IOException
 	{
@@ -32,18 +35,23 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 		socket_   = listener_.accept();		
 		
 		inputBuffer_ = new BufferedReader(new InputStreamReader(socket_.getInputStream()));
-		outputBuffer_= new PrintWriter(socket_.getOutputStream(), true);
+		outputBuffer_= new PrintStream(socket_.getOutputStream());
+		serverIsStarted_ = true;
+		
+		new Thread (this).start();
 	}
 	
 	public void stopServer () throws IOException
 	{
+		serverIsStarted_ = false;
 		socket_.close();
 		listener_.close();
 	}
 	
 	/* IDynatacBus methods*/
 	public void write(String data) {
-		outputBuffer_.write(data);
+		System.out.println("Sent: " + data);
+		outputBuffer_.println(data);
 	}
 
 	public void setOnDataAvailable(IDynatacBusSuscriptor s) {
@@ -65,21 +73,24 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 
 	/* Runnable methods */
 	public void run() {
-		boolean finished = false;
-		
-		while (!finished)
+		while (serverIsStarted_)
 		{
+			while (inputBuffer_ == null)
+			{
+				System.out.println("no input buffer...");
+				
+			}
 			try {
 				String line = null;
 				line = inputBuffer_.readLine();
 				notifySuscriptors (line);
+				System.out.println("New line received: " + line);
 			} catch (IOException e) {
 				
 				e.printStackTrace();
 			}	
 		}
 		
-		// these lines will never be executed
 		try {
 			stopServer();
 		} catch (IOException e) {
