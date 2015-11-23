@@ -22,9 +22,11 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 	private BufferedReader input_  = null;
 	private PrintStream    output_ = null;
 	
-	public DynatacBusClientSocket (String addr, int port) {
+	public DynatacBusClientSocket (String addr, int port) throws IOException {
 		remoteAddr_ = addr;
 		remotePort_ = port;
+		
+		connect (remoteAddr_, remotePort_);
 		
 		new Thread (this).start();
 	}
@@ -73,12 +75,6 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 	}
 
 	public void run() {
-		
-		try {
-			connect (remoteAddr_, remotePort_);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 		
 		while (true)
 		{

@@ -74,12 +74,6 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 
 	public void run() {
 		
-		try {
-			connect (remoteAddr_, remotePort_);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
 		while (true)
 		{
 				// if available data, notify suscriptors

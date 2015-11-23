@@ -26,6 +26,7 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 	/// Constructor
 	public DynatacBusServerSocket (int aPort) {
 		myPort_ = aPort;
+		startServer (myPort_);
 		
 		new Thread (this).start();
 	}
@@ -72,11 +73,6 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 
 	/* Runnable methods */
 	public void run() {
-		try {
-			startServer (myPort_);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 	
 		
 		while (serverIsStarted_)

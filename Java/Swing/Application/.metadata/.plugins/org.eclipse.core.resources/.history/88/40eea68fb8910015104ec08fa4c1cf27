@@ -14,6 +14,7 @@ import java.io.PrintStream;
 
 public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 	private List<IDynatacBusSuscriptor > suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();
+	private boolean connected_;
 	
 	String remoteAddr_ = "";
 	int remotePort_ = 0;
@@ -22,9 +23,12 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 	private BufferedReader input_  = null;
 	private PrintStream    output_ = null;
 	
-	public DynatacBusClientSocket (String addr, int port) {
+	public DynatacBusClientSocket (String addr, int port) throws IOException {
 		remoteAddr_ = addr;
 		remotePort_ = port;
+		connected_ = false;
+		
+		connect (remoteAddr_, remotePort_);
 		
 		new Thread (this).start();
 	}
@@ -36,6 +40,8 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 		socket_ = new Socket (addr, port);
 		input_  = new BufferedReader(new InputStreamReader(socket_.getInputStream()));
 		output_ = new PrintStream(socket_.getOutputStream()); 		
+
+		connected_ = true;
 	}
 	
 	private void disconnect () throws IOException
@@ -47,12 +53,17 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 			socket_.close();
 			socket_ = null;
 		}
+
+		connected_ = false; 
 	}
 	
 
 	/* IDynatacBus methods*/
 	public void write(String data) {
+		if (connected_)
+		{
 			output_.println(data);
+		}
 	}
 
 	public void setOnDataAvailable(IDynatacBusSuscriptor s) {
@@ -74,14 +85,10 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 
 	public void run() {
 		
-		try {
-			connect (remoteAddr_, remotePort_);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
 		while (true)
 		{
+			if (connected_)
+			{
 				// if available data, notify suscriptors
 				try {
 					String line = null;
@@ -91,6 +98,17 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 					
 					e.printStackTrace();
 				}	
+			}
+			else
+			{
+				try {
+					disconnect();
+					connect (remoteAddr_, remotePort_);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
 		}
 		
 		//disconnect();
