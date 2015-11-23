@@ -37,10 +37,10 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 	{
 		input_  = null;
 		output_ = null;
-		if (socket_ != null)
+		if (socket_)
 		{
 			socket_.close();
-			socket_ = null;
+			socket = null;
 		}
 
 		connected_ = false; 

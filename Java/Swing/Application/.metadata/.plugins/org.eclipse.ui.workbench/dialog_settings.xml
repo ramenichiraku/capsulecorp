@@ -12,8 +12,6 @@
 		<list key="textEntries">
 		</list>
 	</section>
-	<section name="ZipFileImportWizard">
-	</section>
 	<section name="NewWizardAction">
 		<item value="org.eclipse.wb.swing.JFrame" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
 		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
@@ -21,6 +19,12 @@
 			<item value="org.eclipse.wb/org.eclipse.wb.swing"/>
 		</list>
 	</section>
+	<section name="ZipFileImportWizard">
+	</section>
 	<section name="ImportExportAction">
+		<item value="org.eclipse.jdt.internal.ui.jarpackager.JarPackageWizard" key="ImportExportPage.STORE_SELECTED_EXPORT_WIZARD_ID"/>
+		<list key="ImportExportPage.STORE_EXPANDED_EXPORT_CATEGORIES">
+			<item value="org.eclipse.jdt.ui.Java"/>
+		</list>
 	</section>
 </section>
