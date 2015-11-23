@@ -52,10 +52,21 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 	public DomoDuino() {
 		currentLedStatus = 0;
 		
-		//final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(DynatacBusSerial.getInstance());
+		final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(DynatacBusSerial.getInstance());
 			
-		final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(new DynatacBusServerSocket(9090));
+		/*
+		DynatacBusServerSocket server_ = new DynatacBusServerSocket();
 		
+		try {
+			server_.startServer(9090);
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		
+		final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(server_);
+		*/
 		dynatac_.setOnEvent(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

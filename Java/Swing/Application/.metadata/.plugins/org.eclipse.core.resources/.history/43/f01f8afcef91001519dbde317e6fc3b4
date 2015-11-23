@@ -15,23 +15,21 @@ import java.io.PrintWriter;
 
 public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 	private List<IDynatacBusSuscriptor > suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();
-	private int myPort_;
 	
+	
+	/// Constructor
+	public DynatacBusServerSocket () {
+	}
+
 	private boolean serverIsStarted_;
 	private ServerSocket listener_;
 	private Socket socket_;
 	
+	//private BufferedReader inputBuffer_;
 	private BufferedReader inputBuffer_ = null;
 	private PrintStream    outputBuffer_ = null;
-	
-	
-	/// Constructor
-	public DynatacBusServerSocket (int aPort) {
-		myPort_ = aPort;
-		new Thread (this).start();
-	}
 
-	private void startServer (int myPort) throws IOException
+	public void startServer (int myPort) throws IOException
 	{
 		listener_ = new ServerSocket(myPort);
 		socket_   = listener_.accept();		
@@ -39,9 +37,11 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 		inputBuffer_ = new BufferedReader(new InputStreamReader(socket_.getInputStream()));
 		outputBuffer_= new PrintStream(socket_.getOutputStream());
 		serverIsStarted_ = true;
+		
+		new Thread (this).start();
 	}
 	
-	private void stopServer () throws IOException
+	public void stopServer () throws IOException
 	{
 		serverIsStarted_ = false;
 		socket_.close();
@@ -73,13 +73,6 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 
 	/* Runnable methods */
 	public void run() {
-		try {
-			startServer (myPort_);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	
-		
 		while (serverIsStarted_)
 		{
 			while (inputBuffer_ == null)

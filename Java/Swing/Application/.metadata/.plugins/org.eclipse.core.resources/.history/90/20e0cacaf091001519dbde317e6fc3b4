@@ -21,6 +21,7 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 	private ServerSocket listener_;
 	private Socket socket_;
 	
+	//private BufferedReader inputBuffer_;
 	private BufferedReader inputBuffer_ = null;
 	private PrintStream    outputBuffer_ = null;
 	

@@ -15,21 +15,20 @@ import java.io.PrintWriter;
 
 public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 	private List<IDynatacBusSuscriptor > suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();
-	private int myPort_;
 	
+	
+	/// Constructor
+	public DynatacBusServerSocket (int aPort) {	
+		new Thread (this).start();
+	}
+
 	private boolean serverIsStarted_;
 	private ServerSocket listener_;
 	private Socket socket_;
 	
+	//private BufferedReader inputBuffer_;
 	private BufferedReader inputBuffer_ = null;
 	private PrintStream    outputBuffer_ = null;
-	
-	
-	/// Constructor
-	public DynatacBusServerSocket (int aPort) {
-		myPort_ = aPort;
-		new Thread (this).start();
-	}
 
 	private void startServer (int myPort) throws IOException
 	{
