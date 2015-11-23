@@ -8,7 +8,7 @@ import java.util.List;
 import java.io.BufferedReader;
 
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 
 
 
@@ -16,24 +16,33 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 	private List<IDynatacBusSuscriptor > suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();
 	private boolean connected_;
 	
-	DynatacBusClientSocket () {
+	String remoteAddr_ = "";
+	int remotePort_ = 0;
+	
+	private Socket socket_ = null;
+	private BufferedReader input_  = null;
+	private PrintStream    output_ = null;
+	
+	public DynatacBusClientSocket (String addr, int port) {
+		remoteAddr_ = addr;
+		remotePort_ = port;
 		connected_ = false;
+		
+		new Thread (this).start();
 	}
 	
-	private Socket socket_;
-	private BufferedReader input_; 
-	private PrintWriter    output_;
 
-	void connect (String addr, int port) throws IOException
+
+	private void connect (String addr, int port) throws IOException
 	{
 		socket_ = new Socket (addr, port);
 		input_  = new BufferedReader(new InputStreamReader(socket_.getInputStream()));
-		output_ = new PrintWriter(socket_.getOutputStream(), true); 		
+		output_ = new PrintStream(socket_.getOutputStream()); 		
 
 		connected_ = true;
 	}
 	
-	void disconnect () throws IOException
+	private void disconnect () throws IOException
 	{
 		input_  = null;
 		output_ = null;
@@ -45,12 +54,13 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 
 		connected_ = false; 
 	}
+	
 
 	/* IDynatacBus methods*/
 	public void write(String data) {
 		if (connected_)
 		{
-			output_.write(data);
+			output_.println(data);
 		}
 	}
 
@@ -72,6 +82,12 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 	}
 
 	public void run() {
+		try {
+			connect (remoteAddr_, remotePort_);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		while (true)
 		{
 			if (connected_)
@@ -86,7 +102,19 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 					e.printStackTrace();
 				}	
 			}
+			else
+			{
+				try {
+					disconnect();
+					connect (remoteAddr_, remotePort_);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
 		}
+		
+		//disconnect();
 		
 	}
 

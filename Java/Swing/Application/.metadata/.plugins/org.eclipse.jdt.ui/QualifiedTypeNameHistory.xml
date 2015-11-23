@@ -14,4 +14,7 @@
 <fullyQualifiedTypeName name="Dynatac.Protocol.IDynatacProtocolMaster"/>
 <fullyQualifiedTypeName name="java.io.PrintStream"/>
 <fullyQualifiedTypeName name="java.io.DataInputStream"/>
+<fullyQualifiedTypeName name="Dynatac.Bus.DynatacBusClientSocket"/>
+<fullyQualifiedTypeName name="Dynatac.Bus.IDynatacBus.IDynatacBusSuscriptor"/>
+<fullyQualifiedTypeName name="Dynatac.Bus.DynatacBusBridge"/>
 </qualifiedTypeNameHistroy>

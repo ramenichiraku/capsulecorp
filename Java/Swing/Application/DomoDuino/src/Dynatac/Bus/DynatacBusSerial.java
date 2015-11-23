@@ -173,11 +173,13 @@ public class DynatacBusSerial implements IDynatacBus, SerialPortEventListener {
 	 * This should be called when you stop using the port.
 	 * This will prevent port locking on platforms like Linux.
 	 */
+	/*
 	private synchronized void close() {
 		if (serialPort != null) {
 			serialPort.removeEventListener();
 			serialPort.close();
 		}
-	}	
+	}
+	*/	
 
 }
