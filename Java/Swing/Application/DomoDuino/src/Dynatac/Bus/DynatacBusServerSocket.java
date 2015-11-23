@@ -17,26 +17,25 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 	
 	
 	/// Constructor
-	DynatacBusServerSocket (int port) {
-		myPort_ = port;
+	DynatacBusServerSocket () {
 	}
+
 	private ServerSocket listener_;
 	private Socket socket_;
-	private int myPort_;
 	
 	private BufferedReader inputBuffer_;
-    private PrintWriter    outputBuffer_;
-	
-	private void openConnection (int port) throws IOException
+	private PrintWriter    outputBuffer_;
+
+	public void startServer (int myPort) throws IOException
 	{
-		listener_ = new ServerSocket(port);
+		listener_ = new ServerSocket(myPort);
 		socket_   = listener_.accept();		
 		
 		inputBuffer_ = new BufferedReader(new InputStreamReader(socket_.getInputStream()));
 		outputBuffer_= new PrintWriter(socket_.getOutputStream(), true);
 	}
 	
-	private void closeConnection () throws IOException
+	public void stopServer () throws IOException
 	{
 		socket_.close();
 		listener_.close();
@@ -67,11 +66,6 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 	/* Runnable methods */
 	public void run() {
 		boolean finished = false;
-		try {
-			openConnection (myPort_);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 		
 		while (!finished)
 		{
@@ -87,7 +81,7 @@ public class DynatacBusServerSocket implements IDynatacBus, Runnable {
 		
 		// these lines will never be executed
 		try {
-			closeConnection();
+			stopServer();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 

@@ -14,35 +14,44 @@ import java.io.PrintWriter;
 
 public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 	private List<IDynatacBusSuscriptor > suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();
-	private String serverAddress_;
-	private int serverPort_;
+	private boolean connected_;
 	
-	DynatacBusClientSocket (String addr, int port) {
-		serverAddress_ = addr;
-		serverPort_ = port;
+	DynatacBusClientSocket () {
+		connected_ = false;
 	}
 	
 	private Socket socket_;
 	private BufferedReader input_; 
 	private PrintWriter    output_;
-	
-	void open (int address, int port) throws IOException
+
+	void connect (String addr, int port) throws IOException
 	{
-		socket_ = new Socket (serverAddress_, serverPort_);
+		socket_ = new Socket (addr, port);
 		input_  = new BufferedReader(new InputStreamReader(socket_.getInputStream()));
 		output_ = new PrintWriter(socket_.getOutputStream(), true); 		
+
+		connected_ = true;
 	}
 	
-	void close () throws IOException
+	void disconnect () throws IOException
 	{
 		input_  = null;
 		output_ = null;
-		socket_.close();
-	}
-	/* IDynatacBus methods*/
+		if (socket_)
+		{
+			socket_.close();
+			socket = null;
+		}
 
+		connected_ = false; 
+	}
+
+	/* IDynatacBus methods*/
 	public void write(String data) {
-		output_.write(data);
+		if (connected_)
+		{
+			output_.write(data);
+		}
 	}
 
 	public void setOnDataAvailable(IDynatacBusSuscriptor s) {
@@ -65,16 +74,18 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 	public void run() {
 		while (true)
 		{
-			// if available data, notify suscriptors
-			try {
-				String line = null;
-				line = input_.readLine();
-				notifySuscriptors (line);
-			} catch (IOException e) {
-				
-				e.printStackTrace();
-			}	
-		
+			if (connected_)
+			{
+				// if available data, notify suscriptors
+				try {
+					String line = null;
+					line = input_.readLine();
+					notifySuscriptors (line);
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}	
+			}
 		}
 		
 	}
