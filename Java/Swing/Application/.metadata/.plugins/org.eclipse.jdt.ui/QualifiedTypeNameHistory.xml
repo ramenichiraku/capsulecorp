@@ -17,4 +17,5 @@
 <fullyQualifiedTypeName name="Dynatac.Bus.DynatacBusClientSocket"/>
 <fullyQualifiedTypeName name="Dynatac.Bus.IDynatacBus.IDynatacBusSuscriptor"/>
 <fullyQualifiedTypeName name="Dynatac.Bus.DynatacBusBridge"/>
+<fullyQualifiedTypeName name="java.util.List"/>
 </qualifiedTypeNameHistroy>

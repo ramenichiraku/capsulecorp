@@ -18,28 +18,26 @@ import java.util.ArrayList;
 
 public class DynatacBusSerial implements IDynatacBus, SerialPortEventListener {
 	/// Constructor
-	/** 
-	 * Singleton pattern and protected constructor
-	 * */
-	private static DynatacBusSerial instance_ = null;
-	protected DynatacBusSerial ()
+	String myPort_;
+
+	public DynatacBusSerial (String port)
 	{
-		initialize ();
-		System.out.println("SerialManager created");
+		myPort_ = port;
+
+		initialize();
+		System.out.println("SerialManager created with port" + myPort_);
 	}
-	public static DynatacBusSerial getInstance () {
-		if (instance_ == null)
-		{
-			instance_ = new DynatacBusSerial();
-		}
-		
-		return instance_;
+
+	protected void finalize( ) //throws Throwable   
+	{
+	 	close();
 	}
+
 	
 	///////////////////////////////////////////////////	
 	/// Internal variables
 	private List<IDynatacBusSuscriptor> suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();			
-	private static SerialPort serialPort;
+	private SerialPort serialPort;
 	
 	/**
 	* A BufferedReader which will be fed by a InputStreamReader 
@@ -47,22 +45,24 @@ public class DynatacBusSerial implements IDynatacBus, SerialPortEventListener {
 	* making the displayed results codepage independent
 	*/
 	
-	private static BufferedReader input;
+	private BufferedReader input;
 	/** The output stream to the port */
-	private static OutputStream output;
+	private OutputStream output;
 	/** Milliseconds to block while waiting for port open */
-	private static final int TIME_OUT = 2000;
+	private final int TIME_OUT = 2000;
 	/** Default bits per second for COM port. */
-	private static final int DATA_RATE = 9600;
+	private final int DATA_RATE = 9600;
 
 	
     /** The port we're normally going to use. */
+    /*
 	private static final String PORT_NAMES[] = { 
 			"/dev/tty.usbserial-A9007UX1", // Mac OS X
 			"/dev/ttyACM0", // Raspberry Pi
 			"/dev/ttyUSB0", // Linux
 			"COM3", // Windows
 			};
+    */
 			
 	/// Internal methods
 
@@ -72,7 +72,7 @@ public class DynatacBusSerial implements IDynatacBus, SerialPortEventListener {
 	/**
 	 * Handle an event on the serial port. Read the data and print it.
 	 */
-	public synchronized void serialEvent(SerialPortEvent oEvent) {
+	public void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				String inputLine=input.readLine();
@@ -107,6 +107,23 @@ public class DynatacBusSerial implements IDynatacBus, SerialPortEventListener {
 			suscriptors_.add(s);
 		}
 	}
+
+	public static List<String> getDetectedPorts () {
+		List<String> names = new ArrayList<String>();
+	
+		@SuppressWarnings("unchecked")
+		java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
+			
+		while (portEnum.hasMoreElements()) {
+			CommPortIdentifier currPortId = portEnum.nextElement();
+
+			String portName = currPortId.getName();
+
+			names.add (portName);
+		}
+
+		return names;
+	}
 	
 
 	
@@ -114,7 +131,7 @@ public class DynatacBusSerial implements IDynatacBus, SerialPortEventListener {
 	 * Public methods, all static because it is a singleton 
 	 * 
 	 */
-	private synchronized void initialize() {
+	private void initialize() {
 /*
         // the next line is for Raspberry Pi and 
         // gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
@@ -123,23 +140,20 @@ public class DynatacBusSerial implements IDynatacBus, SerialPortEventListener {
 		
 		CommPortIdentifier portId = null;
 		//Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
+		@SuppressWarnings("unchecked")
 		java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
 
-		System.out.println ("Start looking for ports..");
-		//First, Find an instance of serial port as set in PORT_NAMES.
+		System.out.println ("Trying to open port " + myPort_);
 		while (portEnum.hasMoreElements()) {
 			CommPortIdentifier currPortId = portEnum.nextElement();
-			System.out.println ("Expected name: "+currPortId);
-			for (String portName : PORT_NAMES) {
-				System.out.println("Trying port name: " + portName);
-				if (currPortId.getName().equals(portName)) {
-					portId = currPortId;
-					System.out.println("COM port found:."+portName);
-					break;
-				}
+			if (currPortId.getName().equals(myPort_))
+			{
+				portId = currPortId;
+				System.out.println("COM port found:."+myPort_);
+				break;
 			}
 		}
-		
+
 		if (portId == null) {
 			System.err.println("Could not find COM port.");
 		}
@@ -173,13 +187,12 @@ public class DynatacBusSerial implements IDynatacBus, SerialPortEventListener {
 	 * This should be called when you stop using the port.
 	 * This will prevent port locking on platforms like Linux.
 	 */
-	/*
 	private synchronized void close() {
+		System.out.println("Closing serial port.");;
 		if (serialPort != null) {
 			serialPort.removeEventListener();
 			serialPort.close();
 		}
 	}
-	*/	
 
 }

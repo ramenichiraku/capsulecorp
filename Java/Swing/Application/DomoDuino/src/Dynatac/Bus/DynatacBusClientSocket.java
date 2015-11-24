@@ -38,6 +38,7 @@ public class DynatacBusClientSocket implements IDynatacBus, Runnable {
 		output_ = new PrintStream(socket_.getOutputStream()); 		
 	}
 	
+	@SuppressWarnings("unused")
 	private void disconnect () throws IOException
 	{
 		input_  = null;

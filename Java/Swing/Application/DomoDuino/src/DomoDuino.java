@@ -17,8 +17,10 @@ import Dynatac.Protocol.IDynatacProtocolMaster.IDynatacProtocolMasterSuscriptor;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
+@SuppressWarnings("unused")
 public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscriptor{
 
 	/**
@@ -53,8 +55,38 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 	int currentLedStatus;
 	public DomoDuino() throws IOException {
 		currentLedStatus = 0;
+
+		List<String> detectedSerialPorts = DynatacBusSerial.getDetectedPorts();
+		String aSerialPortName = "";
+		System.out.println("Existing serial ports: "+ detectedSerialPorts.size());
 		
-		final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(DynatacBusSerial.getInstance());
+		for (int i = 0; i < detectedSerialPorts.size() && aSerialPortName == ""; i++)
+		{
+			String name = detectedSerialPorts.get(i);
+			System.out.println("Serial port "+ i + " named: " + name);
+			if (
+					name.equals("/dev/tty.usbserial-A9007UX1") // Mac OS X
+			 ||     name.equals("/dev/ttyACM0") // Raspberry Pi
+			 ||     name.equals("/dev/ttyUSB0") // Linux
+			 ||     name.equals("COM3") // Windows 
+			 )
+			{
+				aSerialPortName = detectedSerialPorts.get(i);
+				System.out.println("Found port: "+ aSerialPortName);
+			}
+		}
+		
+		if (aSerialPortName == "")
+		{
+			System.err.println ("ERROR. No serial devices found.");
+		}
+		else
+		{
+			System.out.println("Using port: "+ aSerialPortName);
+			
+		}
+	
+		final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(new DynatacBusSerial(aSerialPortName));
 			
 		//final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(new DynatacBusServerSocket(9090));
 		
