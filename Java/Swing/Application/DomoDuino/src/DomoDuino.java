@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import Dynatac.Bus.DynatacBusBridge;
 import Dynatac.Bus.DynatacBusClientSocket;
 import Dynatac.Bus.DynatacBusSerial;
+import Dynatac.Bus.DynatacBusSerial.DynatacBusSerial_ConfigInfo;
 import Dynatac.Bus.DynatacBusServerSocket;
 import Dynatac.Protocol.DynatacProtocol;
 import Dynatac.Protocol.IDynatacProtocolMaster;
@@ -55,8 +56,8 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 	int currentLedStatus;
 	public DomoDuino() throws IOException {
 		currentLedStatus = 0;
-
-		List<String> detectedSerialPorts = DynatacBusSerial.getDetectedPorts();
+/*
+		List<String> detectedSerialPorts = DynatacBusSerial.scanPorts();
 		String aSerialPortName = "";
 		System.out.println("Existing serial ports: "+ detectedSerialPorts.size());
 		
@@ -85,14 +86,15 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 			System.out.println("Using port: "+ aSerialPortName);
 			
 		}
-	
-		final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(new DynatacBusSerial(aSerialPortName));
+		
+		final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(new DynatacBusSerial(aSerialPortName, new DynatacBusSerial_ConfigInfo()));
+		*/
 			
 		//final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(new DynatacBusServerSocket(9090));
 		
 		//final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(new DynatacBusClientSocket("192.168.1.7",9090));
 		
-		//final IDynatacProtocolMaster dynatac_= new DynatacProtocol(new DynatacBusBridge(new DynatacBusServerSocket(9090),new DynatacBusServerSocket(9091)));
+		final IDynatacProtocolMaster dynatac_= new DynatacProtocol(new DynatacBusBridge(new DynatacBusServerSocket(9090),new DynatacBusServerSocket(9091)));
 		
 		//final IDynatacProtocolMaster dynatac_= new DynatacProtocol(new DynatacBusBridge(new DynatacBusServerSocket(9090),new DynatacBusClientSocket("192.168.1.105",9091)));
 		

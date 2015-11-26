@@ -12,10 +12,13 @@
 <fullyQualifiedTypeName name="Frame.IFrame"/>
 <fullyQualifiedTypeName name="Message.MessageMaster"/>
 <fullyQualifiedTypeName name="Dynatac.Protocol.IDynatacProtocolMaster"/>
-<fullyQualifiedTypeName name="java.io.PrintStream"/>
 <fullyQualifiedTypeName name="java.io.DataInputStream"/>
 <fullyQualifiedTypeName name="Dynatac.Bus.DynatacBusClientSocket"/>
 <fullyQualifiedTypeName name="Dynatac.Bus.IDynatacBus.IDynatacBusSuscriptor"/>
 <fullyQualifiedTypeName name="Dynatac.Bus.DynatacBusBridge"/>
 <fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="Dynatac.Bus.DynatacBusSerial.DynatacBusSerial_ConfigInfo"/>
+<fullyQualifiedTypeName name="java.io.InputStream"/>
+<fullyQualifiedTypeName name="java.io.InputStreamReader"/>
+<fullyQualifiedTypeName name="java.io.PrintStream"/>
 </qualifiedTypeNameHistroy>

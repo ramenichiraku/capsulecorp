@@ -1,0 +1,75 @@
+package Dynatac.Bus;
+
+import java.io.IOException;
+import java.net.Socket;
+
+
+public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable {	
+	
+	
+	public DynatacBusClientSocket (String addr, int port) {
+		remoteAddr_ = addr;
+		remotePort_ = port;
+		
+		new Thread (this).start();
+	}
+
+	private void connect (String addr, int port) throws IOException
+	{
+		socket_ = new Socket (addr, port);
+		
+		streamInitializations (socket_.getInputStream(),socket_.getOutputStream());
+	}
+	
+	@SuppressWarnings("unused")
+	private void disconnect () throws IOException
+	{
+		if (socket_ != null)
+		{
+			socket_.close();
+			socket_ = null;
+		}
+	}
+
+	public void run() {
+		initialize ();
+		
+		while (true)
+		{
+			dataAvailable();	
+		}
+		
+		//disconnect();
+	}
+
+	/* TBD: This method can be removed... */
+	/**
+	 * Common method to initialize
+	 */
+	protected void initialize() {
+		try {
+			connect (remoteAddr_, remotePort_);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Common method to end up
+	 */
+	protected void close() {
+		try {
+			stopServer();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
+	}
+	
+	/**
+	 * Internal class variables
+	 */
+	private String 	remoteAddr_ = "";
+	private int 	remotePort_ = 0;
+	private Socket 	socket_ 	= null;
+}

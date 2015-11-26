@@ -1,13 +1,10 @@
 package Dynatac.Bus;
 
-/* java serial access*/
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import gnu.io.CommPortIdentifier; 
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent; 
 import gnu.io.SerialPortEventListener;
+import Dynatac.Bus.DynatacBusBase;
 
 
 //import java.util.Enumeration;
@@ -16,104 +13,73 @@ import java.util.List;
 
 import java.util.ArrayList;
 
-public class DynatacBusSerial implements IDynatacBus, SerialPortEventListener {
-	/// Constructor
-	String myPort_;
-
-	public DynatacBusSerial (String port)
-	{
-		myPort_ = port;
-
-		initialize();
-		System.out.println("SerialManager created with port" + myPort_);
-	}
-
-	protected void finalize( ) //throws Throwable   
-	{
-	 	close();
-	}
-
-	
-	///////////////////////////////////////////////////	
-	/// Internal variables
-	private List<IDynatacBusSuscriptor> suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();			
-	private SerialPort serialPort;
+public class DynatacBusSerial extends DynatacBusBase implements SerialPortEventListener {
 	
 	/**
-	* A BufferedReader which will be fed by a InputStreamReader 
-	* converting the bytes into characters 
-	* making the displayed results codepage independent
-	*/
+	 * Configuration class 
+	 */
+	public static class DynatacBusSerial_ConfigInfo {
+		public DynatacBusSerial_ConfigInfo()
+		{
+			TIME_OUT  = 2000;
+			DATA_RATE = 9600;			
+		}
+		
+		/** Milliseconds to block while waiting for port open */
+		public int TIME_OUT;
+		
+		/** Default bits per second for COM port. */
+		public int DATA_RATE;
+	}
 	
-	private BufferedReader input;
-	/** The output stream to the port */
-	private OutputStream output;
-	/** Milliseconds to block while waiting for port open */
-	private final int TIME_OUT = 2000;
-	/** Default bits per second for COM port. */
-	private final int DATA_RATE = 9600;
-
-	
-    /** The port we're normally going to use. */
-    /*
-	private static final String PORT_NAMES[] = { 
-			"/dev/tty.usbserial-A9007UX1", // Mac OS X
-			"/dev/ttyACM0", // Raspberry Pi
-			"/dev/ttyUSB0", // Linux
-			"COM3", // Windows
-			};
-    */
-			
-	/// Internal methods
-
-	/* 
-	 * SerialPortEventListener methods 
-	 * */
+	public DynatacBusSerial (String port, DynatacBusSerial_ConfigInfo info)
+	{
+		myPort_   = port;
+		timeout_  = info.TIME_OUT;
+		dataRate_ = info.DATA_RATE;
+		
+		initialize();
+		
+		System.out.println("SerialManager created with port" + myPort_);
+	}
+		
 	/**
 	 * Handle an event on the serial port. Read the data and print it.
 	 */
 	public void serialEvent(SerialPortEvent oEvent) {
+		
+		// 
+		//
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-			try {
-				String inputLine=input.readLine();
-				
-				for (int z = 0; z<suscriptors_.size(); z++)
-				{
-					IDynatacBusSuscriptor s = suscriptors_.get(z);
-					
-					s.dataAvailable(inputLine);
-				}				
-			} catch (Exception e) {
-				System.err.println(e.toString());
-				//aSuscriptor.connectionError();
-			}
+			
+			// Call parent protected method
+			//
+			dataAvailable();
 		}
+		// else {
+		
 		// Ignore all the other eventTypes, but you should consider the other ones.
+		//
+		
+		// }
 	}
 	
-	public void write(String data) {
-		System.out.println("Sent: " + data);
-		try {
-			output.write(data.getBytes());
-		} catch (Exception e) {
-			System.out.println("could not write to port");
-			e.printStackTrace();
-		}
-	}
-	
-	public void setOnDataAvailable(IDynatacBusSuscriptor s) {
-		if (!suscriptors_.contains(s))
-		{
-			suscriptors_.add(s);
-		}
-	}
-
-	public static List<String> getDetectedPorts () {
+	/**
+	 * Scans for available serial ports
+	 * 
+	 * @return a list of valid serial ports
+	 */
+	public static List<String> scanPorts () {
+		
+		// Return variable
+		//
 		List<String> names = new ArrayList<String>();
 	
 		@SuppressWarnings("unchecked")
 		java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
-			
+
+		// Go through all elements and add the detected ports
+		//
 		while (portEnum.hasMoreElements()) {
 			CommPortIdentifier currPortId = portEnum.nextElement();
 
@@ -125,74 +91,88 @@ public class DynatacBusSerial implements IDynatacBus, SerialPortEventListener {
 		return names;
 	}
 	
-
 	
 	/**
 	 * Public methods, all static because it is a singleton 
 	 * 
 	 */
-	private void initialize() {
-/*
-        // the next line is for Raspberry Pi and 
-        // gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
-        System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM0");
-*/
+	protected void initialize() {
 		
+		// Variables
+		//
 		CommPortIdentifier portId = null;
 		//Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 		@SuppressWarnings("unchecked")
 		java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
 
+		// Look for com port
+		//
 		System.out.println ("Trying to open port " + myPort_);
 		while (portEnum.hasMoreElements()) {
 			CommPortIdentifier currPortId = portEnum.nextElement();
 			if (currPortId.getName().equals(myPort_))
 			{
 				portId = currPortId;
-				System.out.println("COM port found:."+myPort_);
+				System.out.println("COM port found: "+myPort_);
 				break;
 			}
 		}
 
+		// Raise an error if no com port is available
+		//
 		if (portId == null) {
 			System.err.println("Could not find COM port.");
 		}
 
+		// Open port if available
+		//
 		try {
-			// open serial port, and use class name for the appName.
-			serialPort = (SerialPort) portId.open(this.getClass().getName(),
-					TIME_OUT);
+			// Open serial port, and use class name for the appName.
+			//
+			serialPort_ = (SerialPort) portId.open(this.getClass().getName(), timeout_);
 
-			// set port parameters
-			serialPort.setSerialPortParams(DATA_RATE,
+			// Set port parameters
+			//
+			serialPort_.setSerialPortParams(dataRate_,
 					SerialPort.DATABITS_8,
 					SerialPort.STOPBITS_1,
 					SerialPort.PARITY_NONE);
 
-			// open the streams
-			input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-			output = serialPort.getOutputStream();
+			// Open the streams
+			//
+			streamInitializations (serialPort_.getInputStream(), serialPort_.getOutputStream());
 
-			// add event listeners
-			serialPort.addEventListener(this);
-			serialPort.notifyOnDataAvailable(true);
+			// Add event listeners
+			//
+			serialPort_.addEventListener(this);
+			serialPort_.notifyOnDataAvailable(true);
+			
 		} catch (Exception e) {
 			System.err.println(e.toString());
-		}
-		
-		System.out.println("Initialized");
+		} 
 	}
 	
 	/**
 	 * This should be called when you stop using the port.
 	 * This will prevent port locking on platforms like Linux.
 	 */
-	private synchronized void close() {
+	protected synchronized void close() {
+		
 		System.out.println("Closing serial port.");;
-		if (serialPort != null) {
-			serialPort.removeEventListener();
-			serialPort.close();
+		
+		// Remove listeners
+		//
+		if (serialPort_ != null) {
+			serialPort_.removeEventListener();
+			serialPort_.close();
 		}
 	}
-
+	
+	/**
+	 * Internal class variables
+	 */
+	private String 		myPort_;
+	private int 		timeout_;
+	private int 		dataRate_;
+	private SerialPort 	serialPort_;
 }

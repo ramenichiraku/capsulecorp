@@ -2,29 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="326" key="DIALOG_WIDTH"/>
-		<item value="150" key="DIALOG_Y_ORIGIN"/>
-		<item value="619" key="DIALOG_X_ORIGIN"/>
+		<item value="114" key="DIALOG_Y_ORIGIN"/>
 		<item value="406" key="DIALOG_HEIGHT"/>
+		<item value="959" key="DIALOG_X_ORIGIN"/>
 		<item value="1|Sans|10.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="casesensitive"/>
 		<item value="false" key="isRegEx"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
-		<item value="false" key="wholeword"/>
-		<item value="DetectedP" key="selection"/>
+		<item value="true" key="wholeword"/>
+		<item value="dataAvailable" key="selection"/>
 		<list key="findhistory">
+			<item value="dataAvailable"/>
+			<item value="serialPort"/>
 			<item value="detectedp"/>
 			<item value="detecteds"/>
 			<item value="detectedb"/>
 			<item value="Thread"/>
 			<item value="write"/>
 			<item value="sendC"/>
-			<item value="endl"/>
-			<item value="cout"/>
 		</list>
 		<list key="replacehistory">
+			<item value="serialPort_"/>
 			<item value="FrameServerSocket"/>
 			<item value="IFrameSuscriptor"/>
 			<item value="SerialManager"/>

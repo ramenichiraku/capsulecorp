@@ -1,0 +1,90 @@
+package Dynatac.Bus;
+
+/* java serial access*/
+import java.io.BufferedReader;
+import java.io.InputStream;
+//import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.List;
+
+
+import java.util.ArrayList;
+
+public abstract class DynatacBusBase implements IDynatacBus {
+
+	/**
+	* Constructor and finalize method
+	*/
+	protected DynatacBusBase ()
+	{
+	}
+
+	protected void finalize() //throws Throwable   
+	{
+	 	close();
+	}
+
+	/**
+	* Methods implemented by the different implementations
+	*/
+	protected abstract void initialize();
+
+	protected abstract void close();
+	
+	protected void streamInitializations (InputStream input, OutputStream output)
+	{
+		output_ = output;
+		input_  = input;
+	}
+
+	/**
+	* Common implementations (suscriptors management)
+	*/
+	protected void notifySuscriptors (String line)
+	{
+		for (int z = 0; z<suscriptors_.size(); z++)
+		{
+			IDynatacBusSuscriptor s = suscriptors_.get(z);
+					
+			s.dataAvailable(line);
+		}				
+	}
+	
+	public void write(String data) {
+		System.out.println("Sent: " + data);
+		try {
+			output_.write(data.getBytes());
+		} catch (Exception e) {
+			System.err.println("Could not write to output buffer.");
+			e.printStackTrace();
+			//assert(0);
+		}
+	}
+	
+	public void setOnDataAvailable(IDynatacBusSuscriptor s) {
+		if (!suscriptors_.contains(s))
+		{
+			suscriptors_.add(s);
+		}
+	}
+
+
+	/**
+	* Internal variables.
+	*/
+	private List<IDynatacBusSuscriptor> suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();			
+
+	/**
+	* Protected variables inherited by other implementations.
+	*/
+
+	/**
+	* A BufferedReader which will be fed by a InputStreamReader 
+	* converting the bytes into characters 
+	* making the displayed results codepage independent
+	*/
+	private BufferedReader input_  = null;
+	//private InputStream	 input_  = null;
+	/** The output stream to the port */
+	private OutputStream 	 output_ = null;
+}

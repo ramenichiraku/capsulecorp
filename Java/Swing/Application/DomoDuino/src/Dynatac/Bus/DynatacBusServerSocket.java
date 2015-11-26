@@ -3,104 +3,91 @@ package Dynatac.Bus;
 import java.net.ServerSocket;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 
 
-public class DynatacBusServerSocket implements IDynatacBus, Runnable {
-	private List<IDynatacBusSuscriptor > suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();
-	private int myPort_;
+public class DynatacBusServerSocket extends DynatacBusBase implements Runnable {
 	
-	private boolean serverIsStarted_;
-	private ServerSocket listener_;
-	private Socket socket_;
-	
-	private BufferedReader inputBuffer_ = null;
-	private PrintStream    outputBuffer_ = null;
-	
-	
-	/// Constructor
+	/**
+	* Constructor
+	*/
 	public DynatacBusServerSocket (int aPort) {
 		myPort_ = aPort;
 		
 		new Thread (this).start();
 	}
 
-	private void startServer (int myPort) throws IOException
+	/**
+	 * Starts listening a socket
+	 * 
+	 * @throws IOException
+	 */
+	private void startServer () throws IOException
 	{
-		listener_ = new ServerSocket(myPort);
+		listener_ = new ServerSocket(myPort_);
 		socket_   = listener_.accept();		
 		
-		inputBuffer_ = new BufferedReader(new InputStreamReader(socket_.getInputStream()));
-		outputBuffer_= new PrintStream(socket_.getOutputStream());
+		// Initialize base class buffers
+		//
+		streamInitializations (socket_.getInputStream(), socket_.getOutputStream());
+		
 		serverIsStarted_ = true;
 	}
 	
+	/**
+	 * Stops socket management
+	 * 
+	 * @throws IOException
+	 */
 	private void stopServer () throws IOException
 	{
 		serverIsStarted_ = false;
 		socket_.close();
 		listener_.close();
 	}
-	
-	/* IDynatacBus methods*/
-	public void write(String data) {
-		System.out.println("Sent: " + data);
-		outputBuffer_.println(data);
-	}
 
-	public void setOnDataAvailable(IDynatacBusSuscriptor s) {
-		if (!suscriptors_.contains(s))
-		{
-			suscriptors_.add(s);
-		}
-	}
-
-	protected void notifySuscriptors (String data)
-	{
-		for (int z = 0; z<suscriptors_.size(); z++)
-		{
-			IDynatacBusSuscriptor s = suscriptors_.get(z);
-			
-			s.dataAvailable(data);
-		}
-	}
-
-	/* Runnable methods */
+	/**
+	 * Listener thread
+	 */
 	public void run() {
+		initialize ();
+	
+		while (serverIsStarted_)
+		{
+			dataAvailable();
+		}
+		
+		close();
+	}
+
+	/* TBD: This method can be removed... */
+	/**
+	 * Common method to initialize
+	 */
+	protected void initialize() {
 		try {
-			startServer (myPort_);
+			startServer ();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+	}
 	
-		
-		while (serverIsStarted_)
-		{
-			while (inputBuffer_ == null)
-			{
-				System.out.println("no input buffer...");
-				
-			}
-			try {
-				String line = null;
-				line = inputBuffer_.readLine();
-				notifySuscriptors (line);
-				System.out.println("New line received: " + line);
-			} catch (IOException e) {
-				
-				e.printStackTrace();
-			}	
-		}
-		
+	/**
+	 * Common method to end up
+	 */
+	protected void close() {
 		try {
 			stopServer();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
+		
 	}
+	
+	/**
+	 * Internal class variables
+	 */
+	private int 		 myPort_;	
+	private boolean 	 serverIsStarted_;
+	private ServerSocket listener_;
+	private Socket 		 socket_;
 }

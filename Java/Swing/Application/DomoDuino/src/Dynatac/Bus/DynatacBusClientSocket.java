@@ -2,100 +2,92 @@ package Dynatac.Bus;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-
-import java.io.BufferedReader;
-
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 
 
-
-public class DynatacBusClientSocket implements IDynatacBus, Runnable {
-	private List<IDynatacBusSuscriptor > suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();
+public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable {	
 	
-	String remoteAddr_ = "";
-	int remotePort_ = 0;
-	
-	private Socket socket_ = null;
-	private BufferedReader input_  = null;
-	private PrintStream    output_ = null;
-	
+	/**
+	 * Construictor 
+	 * 
+	 * @param addr to connect to
+	 * @param port to connect to
+	 */
 	public DynatacBusClientSocket (String addr, int port) {
 		remoteAddr_ = addr;
 		remotePort_ = port;
 		
 		new Thread (this).start();
 	}
-	
 
-
+	/**
+	 * Start the connection to server
+	 * 
+	 * @param addr remote server ip addres
+	 * @param port remote server port
+	 * 
+	 * @throws IOException when could not connect
+	 */
 	private void connect (String addr, int port) throws IOException
 	{
 		socket_ = new Socket (addr, port);
-		input_  = new BufferedReader(new InputStreamReader(socket_.getInputStream()));
-		output_ = new PrintStream(socket_.getOutputStream()); 		
+		
+		streamInitializations (socket_.getInputStream(),socket_.getOutputStream());
 	}
 	
-	@SuppressWarnings("unused")
+	/**
+	 * End up connection
+	 * 
+	 * @throws IOException when not posible to connect
+	 */
 	private void disconnect () throws IOException
 	{
-		input_  = null;
-		output_ = null;
 		if (socket_ != null)
 		{
 			socket_.close();
 			socket_ = null;
 		}
 	}
-	
 
-	/* IDynatacBus methods*/
-	public void write(String data) {
-			output_.println(data);
-	}
-
-	public void setOnDataAvailable(IDynatacBusSuscriptor s) {
-		if (!suscriptors_.contains(s))
-		{
-			suscriptors_.add(s);
-		}
-	}
-
-	protected void notifySuscriptors (String data)
-	{
-		for (int z = 0; z<suscriptors_.size(); z++)
-		{
-			IDynatacBusSuscriptor s = suscriptors_.get(z);
-			
-			s.dataAvailable(data);
-		}
-	}
-
+	/**
+	 * Thread to get new input information
+	 */
 	public void run() {
+		initialize ();
 		
+		while (true)
+		{
+			dataAvailable();	
+		}
+		
+		//
+	}
+
+	/**
+	 * Common method to initialize
+	 */
+	protected void initialize() {
 		try {
 			connect (remoteAddr_, remotePort_);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
-		while (true)
-		{
-				// if available data, notify suscriptors
-				try {
-					String line = null;
-					line = input_.readLine();
-					notifySuscriptors (line);
-				} catch (IOException e) {
-					
-					e.printStackTrace();
-				}	
-		}
-		
-		//disconnect();
-		
 	}
-
+	
+	/**
+	 * Common method to end up
+	 */
+	protected void close() {
+		try {
+			disconnect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	/**
+	 * Internal class variables
+	 */
+	private String 	remoteAddr_ = "";
+	private int 	remotePort_ = 0;
+	private Socket 	socket_ 	= null;
 }
