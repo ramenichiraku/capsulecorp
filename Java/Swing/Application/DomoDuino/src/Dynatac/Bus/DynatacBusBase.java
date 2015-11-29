@@ -12,7 +12,7 @@ import java.util.List;
 
 import java.util.ArrayList;
 
-public abstract class DynatacBusBase implements IDynatacBus {
+public abstract class DynatacBusBase extends DynatacBusCommon implements IDynatacBus {
 	
 	/****************************************
 	 *  INHERITATION INTERFACE 						
@@ -55,13 +55,6 @@ public abstract class DynatacBusBase implements IDynatacBus {
 		}
 	}
 	
-	public void setOnDataAvailable(IDynatacBusSuscriptor s) {
-		if (!suscriptors_.contains(s))
-		{
-			suscriptors_.add(s);
-		}
-	}
-	
 	/****************************************
 	 *  INTERNAL METHODS 						
 	 ****************************************/
@@ -98,24 +91,10 @@ public abstract class DynatacBusBase implements IDynatacBus {
 		input_  = new BufferedReader(new InputStreamReader(input));
 	}
 
-	/**
-	* Common implementations (suscriptors management)
-	*/
-	private void notifySuscriptors (String line)
-	{
-		for (int z = 0; z<suscriptors_.size(); z++)
-		{
-			IDynatacBusSuscriptor s = suscriptors_.get(z);
-					
-			s.dataAvailable(line);
-		}				
-	}
-
 
 	/****************************************
 	 *  INTERNAL VARS 						
 	 ****************************************/
-	private List<IDynatacBusSuscriptor> suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();			
 
 	/**
 	* Protected variables inherited by other implementations.

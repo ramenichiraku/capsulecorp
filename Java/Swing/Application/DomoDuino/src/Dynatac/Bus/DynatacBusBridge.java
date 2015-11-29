@@ -6,7 +6,7 @@ import java.util.List;
 import Dynatac.Bus.IDynatacBus.IDynatacBusSuscriptor;;
 
 
-public class DynatacBusBridge implements IDynatacBus, IDynatacBusSuscriptor {
+public class DynatacBusBridge extends DynatacBusCommon implements IDynatacBusSuscriptor {
 	
 	/**
 	 * 
@@ -52,13 +52,6 @@ public class DynatacBusBridge implements IDynatacBus, IDynatacBusSuscriptor {
 		busLeft_.write(data);
 		busRight_.write(data);
 	}
-
-	public void setOnDataAvailable(IDynatacBusSuscriptor s) {
-		if (!suscriptors_.contains(s))
-		{
-			suscriptors_.add(s);
-		}
-	}
 	
 	public void dataAvailable(String data) {
 		notifySuscriptors (data);				
@@ -67,23 +60,12 @@ public class DynatacBusBridge implements IDynatacBus, IDynatacBusSuscriptor {
 	/****************************************
 	 *  INTERNAL METHODS 						
 	 ****************************************/
-	protected void notifySuscriptors (String data)
-	{
-		for (int z = 0; z<suscriptors_.size(); z++)
-		{
-			IDynatacBusSuscriptor s = suscriptors_.get(z);
-			
-			s.dataAvailable(data);
-		}
-	}
 	
 	/****************************************
 	 *  INTERNAL VARS 						
 	 ****************************************/
 	protected DynatacBusBridge_DynatacBusSuscriptor busLeftSuscriptor_ = null;
 	protected DynatacBusBridge_DynatacBusSuscriptor busRightSuscriptor_ = null;
-	private List<IDynatacBusSuscriptor > suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();
 	private IDynatacBus busLeft_, busRight_;
-	
 }
 	
