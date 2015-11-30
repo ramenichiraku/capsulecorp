@@ -3,18 +3,32 @@ package Dynatac.Bus;
 import java.net.ServerSocket;
 import java.io.IOException;
 import java.net.Socket;
+//import java.net.SocketException;
+
 import Dynatac.Bus.IDynatacBus.IDynatacBusListener;
 
-
+/**
+ * 
+ * @author elotro
+ *
+ */
 public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatacBusListener,Runnable {
 
+	/**
+	 * 
+	 * @author elotro
+	 *
+	 */
 	private class InternalMiniServer extends DynatacBusBase implements Runnable {
 		/**
 		* Constructor
 		*/
+		/**
+		 * Dynatac Bus serving on a socket
+		 * 
+		 * @param aSocket
+		 */
 		public InternalMiniServer (Socket aSocket) {
-
-//			super("InternalMiniServer");
 			socket_ = aSocket;
 			
 			// Open the streams
@@ -25,19 +39,35 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 				e.printStackTrace();
 			}
 			
+			// Start the new thread
+			// 
 			new Thread (this).start();
 		}
 
-		public void run(){
-		    while (true)
-		    {
-		    	dataReady();
-		    }
+		/**
+		 * Internal thread, used to read data
+		 * 
+		 */
+		public void run() {
+			while (true)
+			{
+				// if not data ready means the client has closed its connection
+				//
+				if (!dataReady())
+				{
+					break;
+				}
+			}
+			
+		    close();
 		}
 		
+		// Ending method
+		// 
 		protected void close() {
 			try {
 				socket_.close();
+				myConnectedClients_.removeBus(this);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}			
@@ -55,14 +85,18 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 	*/
 	public DynatacBusServerSocket (int aPort) {
 		myPort_ = aPort;
-		myBridge_ = new DynatacBusBridge();
-		myBridge_.installListener(this);
+		myConnectedClients_ = new DynatacBusBridge();
+		myConnectedClients_.installListener(this);
 		
 		new Thread (this).start();
 	}
 	
+	/**
+	 * write data to all connections
+	 * 
+	 */
 	public void write(String data) {
-		myBridge_.write(data);
+		myConnectedClients_.write(data);
 	}
 
 	/**
@@ -76,7 +110,7 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 		
 		InternalMiniServer miniServer = new InternalMiniServer(aSocket);
 		
-		myBridge_.addBus(miniServer);
+		myConnectedClients_.addBus(miniServer);
 	}
 	
 	public void dataAvailable(String data, IDynatacBus bus) {
@@ -125,5 +159,5 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 	private int 		 myPort_;	
 	private ServerSocket listener_;
 	
-	private DynatacBusBridge myBridge_;
+	private DynatacBusBridge myConnectedClients_;
 }

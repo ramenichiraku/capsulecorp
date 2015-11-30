@@ -7,6 +7,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+/**
+ * 
+ * @author elotro
+ *
+ */
 public abstract class DynatacBusBase extends DynatacBusCommon implements IDynatacBus {
 	
 	/****************************************
@@ -57,21 +62,27 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 	/**
 	 * This method is called by specific bus and read, base dynatac bus will perform a common read line
 	 */
-	protected void dataReady ()
+	protected boolean dataReady ()
 	{
 		// Read buffered line
 		//
+		String inputLine;
 		try {
-			String inputLine = input_.readLine();
-
-			notifyListeners (inputLine);			
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			System.err.println(e1.toString());
-		} catch (Exception e) {
+			inputLine = input_.readLine();
+			
+			if (inputLine == null)
+			{
+				return false;
+			}
+			else
+			{
+				notifyListeners (inputLine);
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
-			System.err.println(e.toString());
 		}
+		
+		return true;
 	}
 	
 	/**

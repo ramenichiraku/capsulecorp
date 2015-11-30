@@ -3,10 +3,10 @@ package Dynatac.Protocol;
 import java.util.List;
 
 import Dynatac.Bus.IDynatacBus;
-import Dynatac.Bus.IDynatacBus.IDynatacBusSuscriptor;
+import Dynatac.Bus.IDynatacBus.IDynatacBusListener;
 import java.util.ArrayList;
 
-public class DynatacProtocol implements IDynatacProtocolMaster, IDynatacProtocolSlave, IDynatacBusSuscriptor {
+public class DynatacProtocol implements IDynatacProtocolMaster, IDynatacProtocolSlave, IDynatacBusListener {
 	private List<IDynatacProtocolMasterSuscriptor> masterSuscriptors_ = new ArrayList<IDynatacProtocolMasterSuscriptor>();
 	private List<IDynatacProtocolSlaveSuscriptor>   slaveSuscriptors_ = new ArrayList<IDynatacProtocolSlaveSuscriptor>();
 	
@@ -15,7 +15,7 @@ public class DynatacProtocol implements IDynatacProtocolMaster, IDynatacProtocol
 	public DynatacProtocol (IDynatacBus aDynatacBus) {
 		myDynatacBus = aDynatacBus;
 		
-		myDynatacBus.setOnDataAvailable(this);
+		myDynatacBus.installListener(this);
 	}
 	
 	/* 
@@ -76,7 +76,7 @@ public class DynatacProtocol implements IDynatacProtocolMaster, IDynatacProtocol
 	/* 
 	 * IDynatacBusSuscriptor methods 
 	 * */
-	public void dataAvailable(String data) {
+	public void dataAvailable(String data, IDynatacBus bus) {
 		int myCommand, myEvent, dataEvent;
 		
 		String[] tokens = data.split(";");
@@ -98,6 +98,7 @@ public class DynatacProtocol implements IDynatacProtocolMaster, IDynatacProtocol
 			}
 		}
 	}
+
 }
 
 

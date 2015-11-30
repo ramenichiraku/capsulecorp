@@ -1,0 +1,73 @@
+package Dynatac.Bus;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import Dynatac.Bus.IDynatacBus.IDynatacBusListener;
+
+
+public class DynatacBusBridge extends DynatacBusCommon implements IDynatacBusListener {
+	
+	/**
+	 * 
+	 * 
+	 *
+	 */
+	class DynatacBusBridge_DynatacBusListener implements IDynatacBusListener {
+		
+		private IDynatacBus dataDestinationBus_ = null;
+		private IDynatacBus dataOriginBus_ = null;
+		
+		DynatacBusBridge_DynatacBusListener (IDynatacBus dataOriginBus, IDynatacBus dataDestinationBus) {
+			dataDestinationBus_ = dataDestinationBus;
+			dataOriginBus_      = dataOriginBus;
+			
+			dataOriginBus_.installListener(this);
+		}
+		
+		public void dataAvailable(String data, IDynatacBus bus) {
+			dataDestinationBus_.write(data);
+		}
+	}	
+	
+	/****************************************
+	 *  OBJECT CONSTRUCTION	
+	 ****************************************/
+	public DynatacBusBridge (IDynatacBus aBusLeft, IDynatacBus aBusRight) {
+		
+		busLeft_  = aBusLeft;
+		busRight_ = aBusRight;
+		
+		busLeftSuscriptor_  = new  DynatacBusBridge_DynatacBusListener(busLeft_,busRight_);
+		busRightSuscriptor_ = new  DynatacBusBridge_DynatacBusListener(busRight_,busLeft_);
+		
+		busLeft_.installListener(this);
+		busRight_.installListener(this);
+	}
+	
+	/****************************************
+	 *  PUBLIC METHODS 						
+	 ****************************************/
+	public void write(String data) {
+		busLeft_.write(data);
+		busRight_.write(data);
+	}
+	
+	public void dataAvailable(String data, IDynatacBus bus) {
+		notifyListeners (data);
+	}
+		
+	/****************************************
+	 *  INTERNAL METHODS 						
+	 ****************************************/
+	
+	/****************************************
+	 *  INTERNAL VARS 						
+	 ****************************************/
+	protected DynatacBusBridge_DynatacBusListener busLeftSuscriptor_ = null;
+	protected DynatacBusBridge_DynatacBusListener busRightSuscriptor_ = null;
+	private   IDynatacBus busLeft_, busRight_;
+	
+	private List<IDynatacBus> buses_ = new ArrayList<IDynatacBus>();
+}
+	
