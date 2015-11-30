@@ -23,7 +23,6 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
-@SuppressWarnings("unused")
 public class DomoDuinoClient extends JFrame implements IDynatacProtocolMasterSuscriptor{
 
 	/**
@@ -58,53 +57,12 @@ public class DomoDuinoClient extends JFrame implements IDynatacProtocolMasterSus
 	int currentLedStatus;
 	
 	private IDynatacProtocolMaster configureMaster ()
-	{
-		// Get localhost ip address
+	{		
+		// Server information
 		//
-		/*
-		try {
-			myIp = DynatacBusServerSocket.getIpAddress();
-		} catch (UnknownHostException e) {
-			System.err.println("Could not get localhost ip address.");
-			return null;
-		}*/
-		
-		// Get serial port where arduino is connecte
-		//
-		List<String> detectedSerialPorts = DynatacBusSerial.scanPorts();
-		String aSerialPortName = "";
-		System.out.println("Existing serial ports: "+ detectedSerialPorts.size());
-		
-		for (int i = 0; i < detectedSerialPorts.size() && aSerialPortName == ""; i++)
-		{
-			String name = detectedSerialPorts.get(i);
-			System.out.println("Serial port "+ i + " named: " + name);
-			if (
-					name.equals("/dev/tty.usbserial-A9007UX1") // Mac OS X
-			 ||     name.equals("/dev/ttyACM0") // Raspberry Pi
-			 ||     name.equals("/dev/ttyUSB0") // Linux
-			 ||     name.equals("COM3") // Windows 
-			 )
-			{
-				aSerialPortName = detectedSerialPorts.get(i);
-				System.out.println("Found port: "+ aSerialPortName);
-			}
-		}
-		
-		if (aSerialPortName == "")
-		{
-			System.err.println ("ERROR. No serial devices found.");
-			return null;
-		}
-		else
-		{
-			System.out.println("Using port: "+ aSerialPortName);
-			
-		}
-		
-		// Get port where start listening server
-		//
+		int localPort = 9090;
 		int serverPort = 9090;
+		String serverIp = "192.168.1.7";
 
 		
 
@@ -112,8 +70,8 @@ public class DomoDuinoClient extends JFrame implements IDynatacProtocolMasterSus
 		//
 		IDynatacBus [] busesList = 
 			{
-				new DynatacBusServerSocket(serverPort),
-				new DynatacBusSerial (aSerialPortName, new DynatacBusSerial_ConfigInfo())
+				/* new DynatacBusServerSocket(localPort), */
+				new DynatacBusClientSocket (serverIp, serverPort)
 			};
 		
 

@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="322" key="DIALOG_WIDTH"/>
-		<item value="114" key="DIALOG_Y_ORIGIN"/>
-		<item value="403" key="DIALOG_HEIGHT"/>
-		<item value="698" key="DIALOG_X_ORIGIN"/>
+		<item value="326" key="DIALOG_WIDTH"/>
+		<item value="62" key="DIALOG_Y_ORIGIN"/>
+		<item value="1416" key="DIALOG_X_ORIGIN"/>
+		<item value="406" key="DIALOG_HEIGHT"/>
 		<item value="1|Sans|10.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="isRegEx"/>
 		<item value="true" key="casesensitive"/>
+		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wholeword"/>
-		<item value="&#x09;&#x09;&#x09;s.dataAvailable(line, this);" key="selection"/>
+		<item value="DomoDuinoTest" key="selection"/>
 		<list key="findhistory">
+			<item value="DomoDuino"/>
 			<item value="dataR"/>
 			<item value="install"/>
 			<item value="instal"/>
@@ -22,9 +23,9 @@
 			<item value="fina"/>
 			<item value="final"/>
 			<item value="startS"/>
-			<item value="installList"/>
 		</list>
 		<list key="replacehistory">
+			<item value="DomoDuinoTest"/>
 			<item value="serialPort_"/>
 			<item value="FrameServerSocket"/>
 			<item value="IFrameSuscriptor"/>
