@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;DomoDuino.java&apos; to &apos;DomoDuinoClient/src&apos;&#x0A;- Original project: &apos;DomoDuino&apos;&#x0A;- Destination element: &apos;DomoDuinoClient/src&apos;&#x0A;- Original element: &apos;DomoDuino.java&apos;" description="Copy compilation unit" destination="=DomoDuinoClient/src" element1="/src&lt;{DomoDuino.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1448895682459" units="1" version="1.0"/>
+</session>

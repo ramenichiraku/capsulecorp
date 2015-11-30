@@ -23,4 +23,5 @@
 <fullyQualifiedTypeName name="java.io.PrintStream"/>
 <fullyQualifiedTypeName name="Dynatac.Bus.IDynatacBus"/>
 <fullyQualifiedTypeName name="Dynatac.Bus.IDynatacBus.IDynatacBusListener"/>
+<fullyQualifiedTypeName name="java.net.Inet4Address"/>
 </qualifiedTypeNameHistroy>
