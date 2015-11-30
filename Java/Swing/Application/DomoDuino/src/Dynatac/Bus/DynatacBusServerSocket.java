@@ -3,17 +3,66 @@ package Dynatac.Bus;
 import java.net.ServerSocket;
 import java.io.IOException;
 import java.net.Socket;
+import Dynatac.Bus.IDynatacBus.IDynatacBusListener;
 
 
-public class DynatacBusServerSocket extends DynatacBusBase implements Runnable {
-	
+public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatacBusListener,Runnable {
+
+	private class InternalMiniServer extends DynatacBusBase implements Runnable {
+		/**
+		* Constructor
+		*/
+		public InternalMiniServer (Socket aSocket) {
+
+//			super("InternalMiniServer");
+			socket_ = aSocket;
+			
+			// Open the streams
+			//
+			try {
+				streamInitializations (socket_.getInputStream(), socket_.getOutputStream());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			new Thread (this).start();
+		}
+
+		public void run(){
+		    while (true)
+		    {
+		    	dataReady();
+		    }
+		}
+		
+		protected void close() {
+			try {
+				socket_.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
+		}
+
+		
+		/**
+		 * Internal class variables
+		 */
+		private Socket socket_ = null;
+	}
+
 	/**
 	* Constructor
 	*/
 	public DynatacBusServerSocket (int aPort) {
 		myPort_ = aPort;
+		myBridge_ = new DynatacBusBridge();
+		myBridge_.installListener(this);
 		
 		new Thread (this).start();
+	}
+	
+	public void write(String data) {
+		myBridge_.write(data);
 	}
 
 	/**
@@ -21,29 +70,19 @@ public class DynatacBusServerSocket extends DynatacBusBase implements Runnable {
 	 * 
 	 * @throws IOException
 	 */
-	private void startServer () throws IOException
+	private void waitForConnections() throws IOException
 	{
-		listener_ = new ServerSocket(myPort_);
-		socket_   = listener_.accept();		
+		Socket aSocket = listener_.accept();
 		
-		// Initialize base class buffers
-		//
-		streamInitializations (socket_.getInputStream(), socket_.getOutputStream());
+		InternalMiniServer miniServer = new InternalMiniServer(aSocket);
 		
-		serverIsStarted_ = true;
+		myBridge_.addBus(miniServer);
 	}
 	
-	/**
-	 * Stops socket management
-	 * 
-	 * @throws IOException
-	 */
-	private void stopServer () throws IOException
-	{
-		serverIsStarted_ = false;
-		socket_.close();
-		listener_.close();
+	public void dataAvailable(String data, IDynatacBus bus) {
+		notifyListeners (data);
 	}
+	
 
 	/**
 	 * Listener thread
@@ -51,23 +90,26 @@ public class DynatacBusServerSocket extends DynatacBusBase implements Runnable {
 	public void run() {
 		initialize ();
 	
-		while (serverIsStarted_)
+		while (true)
 		{
-			dataAvailable();
+			try {
+				waitForConnections ();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		
-		close();
+		//close();
 	}
 
-	/* TBD: This method can be removed... */
 	/**
 	 * Common method to initialize
 	 */
 	protected void initialize() {
 		try {
-			startServer ();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+			listener_ = new ServerSocket(myPort_);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -75,19 +117,13 @@ public class DynatacBusServerSocket extends DynatacBusBase implements Runnable {
 	 * Common method to end up
 	 */
 	protected void close() {
-		try {
-			stopServer();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-		
 	}
 	
 	/**
 	 * Internal class variables
 	 */
 	private int 		 myPort_;	
-	private boolean 	 serverIsStarted_;
 	private ServerSocket listener_;
-	private Socket 		 socket_;
+	
+	private DynatacBusBridge myBridge_;
 }

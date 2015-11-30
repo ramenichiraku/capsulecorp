@@ -54,7 +54,7 @@ public class DynatacBusSerial extends DynatacBusBase implements SerialPortEventL
 			
 			// Call parent protected method
 			//
-			dataAvailable();
+			dataReady();
 		}
 		// else {
 		

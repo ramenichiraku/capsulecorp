@@ -1,12 +1,6 @@
 package Dynatac.Bus;
 
 /* java serial access*/
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.List;
 
 
@@ -17,7 +11,7 @@ public abstract class DynatacBusCommon implements IDynatacBus {
 	/****************************************
 	 *  INHERITATION INTERFACE 						
 	 ****************************************/
-	abstract protected void dataAvailable ();
+	//abstract protected void dataReady ();
 	
 	/****************************************
 	 *  OBJECT CONSTRUCTION	
@@ -33,28 +27,38 @@ public abstract class DynatacBusCommon implements IDynatacBus {
 	/****************************************
 	 *  PUBLIC METHODS 						
 	 ****************************************/
-	public void setOnDataAvailable(IDynatacBusSuscriptor s) {
-		if (!suscriptors_.contains(s))
+	public void installListener(IDynatacBusListener s) {
+		if (!listeners_.contains(s))
 		{
-			suscriptors_.add(s);
+			listeners_.add(s);
 		}
+	}
+	
+	public boolean removeListener(IDynatacBusListener s) {
+		if (!listeners_.contains(s))
+		{
+			listeners_.remove(s);
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/****************************************
 	 *  INTERNAL METHODS 						
 	 ****************************************/
 	
-
 	/**
 	* Common implementations (suscriptors management)
 	*/
-	private void notifySuscriptors (String line)
+	protected void notifyListeners (String line)
 	{
-		for (int z = 0; z<suscriptors_.size(); z++)
+		for (int z = 0; z<listeners_.size(); z++)
 		{
-			IDynatacBusSuscriptor s = suscriptors_.get(z);
+			IDynatacBusListener s = listeners_.get(z);
 					
-			s.dataAvailable(line);
+			s.dataAvailable(line, this);
 		}				
 	}
 
@@ -62,10 +66,9 @@ public abstract class DynatacBusCommon implements IDynatacBus {
 	/****************************************
 	 *  INTERNAL VARS 						
 	 ****************************************/
-	private List<IDynatacBusSuscriptor> suscriptors_ = new ArrayList<IDynatacBusSuscriptor>();			
+	private List<IDynatacBusListener> listeners_ = new ArrayList<IDynatacBusListener>();			
 
 	/**
 	* Protected variables inherited by other implementations.
 	*/
-
 }

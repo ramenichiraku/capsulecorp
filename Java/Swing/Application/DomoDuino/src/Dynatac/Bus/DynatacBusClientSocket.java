@@ -56,7 +56,7 @@ public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable 
 		
 		while (true)
 		{
-			dataAvailable();	
+			dataReady();	
 		}
 		
 		//

@@ -1,16 +1,11 @@
 package Dynatac.Bus;
 
-/* java serial access*/
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.List;
-
-
-import java.util.ArrayList;
 
 public abstract class DynatacBusBase extends DynatacBusCommon implements IDynatacBus {
 	
@@ -62,14 +57,14 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 	/**
 	 * This method is called by specific bus and read, base dynatac bus will perform a common read line
 	 */
-	protected void dataAvailable ()
+	protected void dataReady ()
 	{
 		// Read buffered line
 		//
 		try {
 			String inputLine = input_.readLine();
 
-			notifySuscriptors (inputLine);			
+			notifyListeners (inputLine);			
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			System.err.println(e1.toString());

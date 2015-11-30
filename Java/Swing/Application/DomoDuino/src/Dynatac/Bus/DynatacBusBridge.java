@@ -3,58 +3,82 @@ package Dynatac.Bus;
 import java.util.ArrayList;
 import java.util.List;
 
-import Dynatac.Bus.IDynatacBus.IDynatacBusSuscriptor;;
+import Dynatac.Bus.IDynatacBus.IDynatacBusListener;
 
 
-public class DynatacBusBridge extends DynatacBusCommon implements IDynatacBusSuscriptor {
+public class DynatacBusBridge extends DynatacBusCommon implements IDynatacBusListener {
 	
 	/**
 	 * 
 	 * 
 	 *
-	 */
-	class DynatacBusBridge_DynatacBusSuscriptor implements IDynatacBusSuscriptor {
-		
-		private IDynatacBus dataDestinationBus_ = null;
-		private IDynatacBus dataOriginBus_ = null;
-		
-		DynatacBusBridge_DynatacBusSuscriptor (IDynatacBus dataOriginBus, IDynatacBus dataDestinationBus) {
-			dataDestinationBus_ = dataDestinationBus;
-			dataOriginBus_ = dataOriginBus;
-			
-			dataOriginBus_.setOnDataAvailable(this);
-		}
-		
-		public void dataAvailable(String data) {
-			dataDestinationBus_.write(data);
-		}
-	}	
+	 */	
 	
 	/****************************************
 	 *  OBJECT CONSTRUCTION	
 	 ****************************************/
-	public DynatacBusBridge (IDynatacBus aBusLeft, IDynatacBus aBusRight) {
+	public DynatacBusBridge () {
+		connectedBuses_ = true;
+	}
+	
+	public DynatacBusBridge (IDynatacBus [] buses) {
+		connectedBuses_ = true;
 		
-		busLeft_  = aBusLeft;
-		busRight_ = aBusRight;
+		for (int i = 0; i<buses.length; i++)
+		{
+			addBus (buses[i]);
+		}
+	}
+	
+	public DynatacBusBridge (boolean busesAreConnected) {
+		connectedBuses_ = busesAreConnected;
+	}
+	
+	public DynatacBusBridge (IDynatacBus [] buses, boolean busesAreConnected) {
+		connectedBuses_ = busesAreConnected;
 		
-		busLeftSuscriptor_  = new  DynatacBusBridge_DynatacBusSuscriptor(busLeft_,busRight_);
-		busRightSuscriptor_ = new  DynatacBusBridge_DynatacBusSuscriptor(busRight_,busLeft_);
-		
-		busLeft_.setOnDataAvailable(this);
-		busRight_.setOnDataAvailable(this);
+		for (int i = 0; i<buses.length; i++)
+		{
+			addBus (buses[i]);
+		}
 	}
 	
 	/****************************************
 	 *  PUBLIC METHODS 						
 	 ****************************************/
 	public void write(String data) {
-		busLeft_.write(data);
-		busRight_.write(data);
+		for (int z = 0; z<buses_.size(); z++)
+		{
+			IDynatacBus b = buses_.get(z);
+					
+			b.write(data);
+		}
 	}
 	
-	public void dataAvailable(String data) {
-		notifySuscriptors (data);				
+	public void dataAvailable(String data, IDynatacBus bus) {
+		notifyListeners (data);
+		
+		for (int z = 0; z<buses_.size(); z++)
+		{
+			IDynatacBus b = buses_.get(z);
+			
+			if (b != bus && connectedBuses_) // forward information...
+			{		
+				b.write(data);
+			}
+		}
+	}
+	
+	public void addBus (IDynatacBus aBus)
+	{
+		aBus.installListener(this);
+		buses_.add(aBus);
+	}
+	
+	public void removeBus (IDynatacBus aBus)
+	{
+		aBus.removeListener (this);
+		buses_.remove(aBus);
 	}
 		
 	/****************************************
@@ -63,9 +87,8 @@ public class DynatacBusBridge extends DynatacBusCommon implements IDynatacBusSus
 	
 	/****************************************
 	 *  INTERNAL VARS 						
-	 ****************************************/
-	protected DynatacBusBridge_DynatacBusSuscriptor busLeftSuscriptor_ = null;
-	protected DynatacBusBridge_DynatacBusSuscriptor busRightSuscriptor_ = null;
-	private IDynatacBus busLeft_, busRight_;
+	 ****************************************/	
+	private List<IDynatacBus> buses_ = new ArrayList<IDynatacBus>();
+	boolean connectedBuses_;
 }
 	
