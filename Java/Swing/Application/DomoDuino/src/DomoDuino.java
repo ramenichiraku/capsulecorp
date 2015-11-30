@@ -11,6 +11,7 @@ import Dynatac.Bus.DynatacBusClientSocket;
 import Dynatac.Bus.DynatacBusSerial;
 import Dynatac.Bus.DynatacBusSerial.DynatacBusSerial_ConfigInfo;
 import Dynatac.Bus.DynatacBusServerSocket;
+import Dynatac.Bus.IDynatacBus;
 import Dynatac.Protocol.DynatacProtocol;
 import Dynatac.Protocol.IDynatacProtocolMaster;
 import Dynatac.Protocol.IDynatacProtocolMaster.IDynatacProtocolMasterSuscriptor;
@@ -93,8 +94,14 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 		//final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(new DynatacBusServerSocket(9090));
 		
 		//final IDynatacProtocolMaster dynatac_ = new DynatacProtocol(new DynatacBusClientSocket("192.168.1.7",9090));
+		final IDynatacBus [] busesList = 
+			{new DynatacBusServerSocket(9090),
+			 new DynatacBusServerSocket(9091)};
 		
-		final IDynatacProtocolMaster dynatac_= new DynatacProtocol(new DynatacBusBridge(new DynatacBusServerSocket(9090),new DynatacBusServerSocket(9091)));
+		
+		final IDynatacProtocolMaster dynatac_= new DynatacProtocol(
+				new DynatacBusBridge(busesList)
+				);
 		
 		//final IDynatacProtocolMaster dynatac_= new DynatacProtocol(new DynatacBusBridge(new DynatacBusServerSocket(9090),new DynatacBusClientSocket("192.168.1.105",9091)));
 		
