@@ -6,21 +6,25 @@ import Dynatac.Bus.IDynatacBus;
 import Dynatac.Bus.IDynatacBus.IDynatacBusListener;
 import java.util.ArrayList;
 
+/**
+ * Dynatac protocol implementation for both master and slave
+ */
 public class DynatacProtocol implements IDynatacProtocolMaster, IDynatacProtocolSlave, IDynatacBusListener {
-	private List<IDynatacProtocolMasterSuscriptor> masterSuscriptors_ = new ArrayList<IDynatacProtocolMasterSuscriptor>();
-	private List<IDynatacProtocolSlaveSuscriptor>   slaveSuscriptors_ = new ArrayList<IDynatacProtocolSlaveSuscriptor>();
 	
-	private IDynatacBus myDynatacBus;
-	
+	/**
+	 * Object construction initializations
+	 */
 	public DynatacProtocol (IDynatacBus aDynatacBus) {
-		myDynatacBus = aDynatacBus;
+		myDynatacBus_ = aDynatacBus;
 		
-		myDynatacBus.installListener(this);
+		myDynatacBus_.installListener(this);
 	}
-	
-	/* 
-	 * DynatacProtocolMaster methods 
-	 * */
+
+	/********************************** 
+	 *				  *
+	 * IDynatacProtocolMaster methods *
+	 *				  *
+	 *********************************/
 	public void setOnEvent(IDynatacProtocolMasterSuscriptor subscriptor) {
 		if (!masterSuscriptors_.contains(subscriptor))
 		{
@@ -30,13 +34,15 @@ public class DynatacProtocol implements IDynatacProtocolMaster, IDynatacProtocol
 	
 	public void sendCommand(int command, int parameter) {
 		String data = "c;"+command+";"+parameter;
-		myDynatacBus.write(data);
+		myDynatacBus_.write(data);
 	}
 
 	
-	/* 
-	 * DynatacProtocolSlave methods 
-	 * */
+	/******************************** 
+	 *				*
+	 * DynatacProtocolSlave methods *
+	 *				*
+	 ********************************/
 	public void setOnCommand(IDynatacProtocolSlaveSuscriptor subscriptor) {
 		if (!slaveSuscriptors_.contains(subscriptor))
 		{
@@ -46,35 +52,21 @@ public class DynatacProtocol implements IDynatacProtocolMaster, IDynatacProtocol
 	
 	public void sendEvent(int event, int parameter) {
 		String data = "e;"+event+";"+parameter;
-		myDynatacBus.write(data);
+		myDynatacBus_.write(data);
 	}
 
-	
-	protected void eventReceived (int myEvent, int myData)
-	{
-		System.out.println ("New event recieved: "+myEvent+" data: "+myData);
-		for (int z = 0; z<masterSuscriptors_.size(); z++)
-		{
-			IDynatacProtocolMasterSuscriptor s = masterSuscriptors_.get(z);
-			
-			s.remoteEvent(myEvent, myData);
-		}
-	}
+	/***************************************** 
+	 *                                       *
+	 * IDynatacBusListener inherited methods * 
+	 *                                       *
+	 *****************************************/
 
-	protected void commandReceived (int myCommand, int myData)
-	{
-		System.out.println ("New event command: "+myCommand+" data: "+myData);
-		for (int z = 0; z<slaveSuscriptors_.size(); z++)
-		{
-			IDynatacProtocolSlaveSuscriptor s = slaveSuscriptors_.get(z);
-			
-			s.commandAvailable(myCommand, myData);
-		}
-	}
-
-	
-	/* 
-	 * IDynatacBusSuscriptor methods 
+	/** 
+	 * Implemetation for IDynatacBusListener methods 
+	 *
+	 * @param1 receibed data
+	 * @param2 bus where data comes from
+	 *
 	 * */
 	public void dataAvailable(String data, IDynatacBus bus) {
 		int myCommand, myEvent, dataEvent;
@@ -98,7 +90,42 @@ public class DynatacProtocol implements IDynatacProtocolMaster, IDynatacProtocol
 			}
 		}
 	}
+	
+	/********************************
+	 *				*
+	 * Private methods 		*
+	 *				*
+	 ********************************/
+	protected void eventReceived (int myEvent, int myData)
+	{
+		System.out.println ("New event recieved: "+myEvent+" data: "+myData);
+		for (int z = 0; z<masterSuscriptors_.size(); z++)
+		{
+			IDynatacProtocolMasterSuscriptor s = masterSuscriptors_.get(z);
+			
+			s.remoteEvent(myEvent, myData);
+		}
+	}
 
+	protected void commandReceived (int myCommand, int myData)
+	{
+		System.out.println ("New event command: "+myCommand+" data: "+myData);
+		for (int z = 0; z<slaveSuscriptors_.size(); z++)
+		{
+			IDynatacProtocolSlaveSuscriptor s = slaveSuscriptors_.get(z);
+			
+			s.commandAvailable(myCommand, myData);
+		}
+	}
+
+
+	/**
+	 * Private vars
+	 */
+	private List<IDynatacProtocolMasterSuscriptor> masterSuscriptors_ = new ArrayList<IDynatacProtocolMasterSuscriptor>();
+	private List<IDynatacProtocolSlaveSuscriptor>   slaveSuscriptors_ = new ArrayList<IDynatacProtocolSlaveSuscriptor>();
+	
+	private IDynatacBus myDynatacBus_;
 }
 
 
