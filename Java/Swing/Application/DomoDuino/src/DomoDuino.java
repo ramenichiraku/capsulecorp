@@ -71,6 +71,7 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 		
 		// Get serial port where arduino is connecte
 		//
+		/*
 		List<String> detectedSerialPorts = DynatacBusSerial.scanPorts();
 		String aSerialPortName = "";
 		System.out.println("Existing serial ports: "+ detectedSerialPorts.size());
@@ -101,7 +102,7 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 			System.out.println("Using port: "+ aSerialPortName);
 			
 		}
-		
+		*/
 		// Get port where start listening server
 		//
 		int serverPort = 9090;
@@ -112,8 +113,8 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 		//
 		IDynatacBus [] busesList = 
 			{
-				new DynatacBusServerSocket(serverPort),
-				new DynatacBusSerial (aSerialPortName, new DynatacBusSerial_ConfigInfo())
+				new DynatacBusServerSocket(serverPort)//,
+				//new DynatacBusSerial (aSerialPortName, new DynatacBusSerial_ConfigInfo())
 			};
 		
 

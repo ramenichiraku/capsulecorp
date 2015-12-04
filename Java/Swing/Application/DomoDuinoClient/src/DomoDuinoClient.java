@@ -62,7 +62,7 @@ public class DomoDuinoClient extends JFrame implements IDynatacProtocolMasterSus
 		//
 		int localPort = 9090;
 		int serverPort = 9090;
-		String serverIp = "192.168.1.7";
+		String serverIp = "192.168.1.34";
 
 		
 
