@@ -54,7 +54,7 @@ public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable 
 	public void run() {
 		initialize ();
 		
-		while (true)
+		while (!Thread.currentThread().isInterrupted())
 		{
 			dataReady();	
 		}

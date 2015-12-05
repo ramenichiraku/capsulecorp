@@ -51,7 +51,7 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 		 * 
 		 */
 		public void run() {
-			while (true)
+			while (!Thread.currentThread().isInterrupted())
 			{
 				// if not data ready means the client has closed its connection
 				//
@@ -126,7 +126,7 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 	public void run() {
 		initialize ();
 	
-		while (true)
+		while (!Thread.currentThread().isInterrupted())
 		{
 			try {
 				waitForConnections ();
