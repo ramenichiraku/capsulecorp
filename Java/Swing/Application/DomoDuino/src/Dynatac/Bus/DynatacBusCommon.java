@@ -62,11 +62,54 @@ public abstract class DynatacBusCommon implements IDynatacBus {
 		}				
 	}
 
+	protected void notifyStatus ()
+	{
+		for (int z = 0; z<listeners_.size(); z++)
+		{
+			IDynatacBusListener s = listeners_.get(z);
+					
+			s.onStatusChange(myStatus_);
+		}				
+	}
+
+	protected void setStatus (int aStatus)
+	{
+			setStatus (aStatus, false);
+	}
+	
+	protected void setStatus (int aStatus, boolean clearPreviously)
+	{
+		if (clearPreviously)
+		{
+			clearStatus();
+		}
+
+		myStatus_ |= aStatus;
+		notifyStatus();
+	}
+
+	private void clearStatus()
+	{
+		clearStatus (0xffffffff);
+	}
+	
+	protected void clearStatus(int aStatus)
+	{
+		myStatus_ &= ~aStatus;
+	}
+
+	protected boolean isSet (int aStatus)
+	{
+		return ((myStatus_ & aStatus) != 0);
+	}
+
 
 	/****************************************
 	 *  INTERNAL VARS 						
 	 ****************************************/
 	private List<IDynatacBusListener> listeners_ = new ArrayList<IDynatacBusListener>();			
+	private int myStatus_ = DYNATAC_BUS_STATUS_NOT_INITIALIZED;
+
 
 	/**
 	* Protected variables inherited by other implementations.

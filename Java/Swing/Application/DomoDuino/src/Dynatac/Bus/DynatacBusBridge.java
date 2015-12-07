@@ -68,6 +68,14 @@ public class DynatacBusBridge extends DynatacBusCommon implements IDynatacBusLis
 			}
 		}
 	}
+
+	public void onStatusChange(int busStatus) {
+		if ((busStatus & DYNATAC_BUS_STATUS_UNAVAILABLE) != 0)
+		{
+			setStatus (DYNATAC_BUS_STATUS_CONNECTION_PROBLEM);	
+		}
+	}
+
 	
 	public void addBus (IDynatacBus aBus)
 	{

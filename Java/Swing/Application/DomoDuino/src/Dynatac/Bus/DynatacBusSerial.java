@@ -149,6 +149,7 @@ public class DynatacBusSerial extends DynatacBusBase implements SerialPortEventL
 			
 		} catch (Exception e) {
 			System.err.println(e.toString());
+			setStatus (DYNATAC_BUS_STATUS_STARTING_FAILED);
 		} 
 	}
 	

@@ -1,6 +1,7 @@
 package Dynatac.Bus;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 
 
@@ -15,8 +16,6 @@ public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable 
 	public DynatacBusClientSocket (String addr, int port) {
 		remoteAddr_ = addr;
 		remotePort_ = port;
-		
-		new Thread (this).start();
 	}
 
 	/**
@@ -29,9 +28,16 @@ public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable 
 	 */
 	private void connect (String addr, int port) throws IOException
 	{
-		socket_ = new Socket (addr, port);
+		InetAddress serverAddr  = InetAddress.getByName(addr);
+
+		socket_ = new Socket (serverAddr, port);
 		
-		streamInitializations (socket_.getInputStream(),socket_.getOutputStream());
+		if (socket_ != null)
+		{		
+			streamInitializations (socket_.getInputStream(),socket_.getOutputStream());
+			
+			new Thread (this).start();
+		}
 	}
 	
 	/**
@@ -69,7 +75,8 @@ public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable 
 		try {
 			connect (remoteAddr_, remotePort_);
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			System.err.println(e1.toString());
+			setStatus (DYNATAC_BUS_STATUS_STARTING_FAILED);
 		}
 	}
 	
@@ -80,7 +87,8 @@ public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable 
 		try {
 			disconnect();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println(e.toString());
+			setStatus (DYNATAC_BUS_STATUS_ENDING_FAILED);
 		}		
 	}
 	

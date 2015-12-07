@@ -48,10 +48,13 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 		try {
 			//output_.write(data.getBytes());
 			output_.println (data);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
+
 			System.err.println("Could not write to output buffer.");
-			e.printStackTrace();
-			//assert(0);
+			//e.printStackTrace();
+			System.err.println(e.getMessage());
+
+			setStatus(DYNATAC_BUS_STATUS_WRITE_ERROR);
 		}
 	}
 	
@@ -61,9 +64,16 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 	
 	/**
 	 * This method is called by specific bus and read, base dynatac bus will perform a common read line
+	 *
+	 * @return false if received null from input line: it means connection has been closed
 	 */
 	protected boolean dataReady ()
 	{
+		if (isSet (DYNATAC_BUS_STATUS_NOT_INITIALIZED))
+		{
+			return true;
+		}
+
 		// Read buffered line
 		//
 		String inputLine;
@@ -72,6 +82,8 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 			
 			if (inputLine == null)
 			{
+//				System.err.println ("");
+				setStatus(DYNATAC_BUS_STATUS_FINISHED);
 				return false;
 			}
 			else
@@ -79,7 +91,11 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 				notifyListeners (inputLine);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println ("Could not read from buffer");
+			System.err.println (e.toString());
+			//e.printStackTrace();
+
+			setStatus(DYNATAC_BUS_STATUS_READ_ERROR);
 		}
 		
 		return true;
@@ -95,7 +111,10 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 	{
 		output_ = new PrintStream (output);
 		input_  = new BufferedReader(new InputStreamReader(input));
+		
+		clearStatus(DYNATAC_BUS_STATUS_NOT_INITIALIZED);
 	}
+
 
 
 	/****************************************
@@ -115,4 +134,6 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 	/** The output stream to the port */
 	//private OutputStream 	 output_ = null;
 	private PrintStream 	 output_ = null;
+
+//	private String errorDescription_    = ;
 }

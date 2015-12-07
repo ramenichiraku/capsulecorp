@@ -91,6 +91,12 @@ public class DynatacProtocol implements IDynatacProtocolMaster, IDynatacProtocol
 		}
 	}
 	
+	@Override
+	public void onStatusChange(int busStatus) {
+		
+		
+	}
+	
 	/********************************
 	 *				*
 	 * Private methods 		*

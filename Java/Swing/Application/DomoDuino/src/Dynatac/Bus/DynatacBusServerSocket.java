@@ -37,13 +37,15 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 			//
 			try {
 				streamInitializations (socket_.getInputStream(), socket_.getOutputStream());
+
+				// Start the new thread
+				// 
+				new Thread (this).start();
+
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.err.println(e.toString());
+				setStatus (DYNATAC_BUS_STATUS_STARTING_FAILED);
 			}
-			
-			// Start the new thread
-			// 
-			new Thread (this).start();
 		}
 
 		/**
@@ -61,7 +63,7 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 				}
 			}
 			
-		    close();
+			close();
 		}
 		
 		// Ending method
@@ -71,7 +73,8 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 				socket_.close();
 				myConnectedClients_.removeBus(this);
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.err.println(e.toString());
+				setStatus (DYNATAC_BUS_STATUS_ENDING_FAILED);
 			}			
 		}
 
@@ -118,6 +121,10 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 	public void dataAvailable(String data, IDynatacBus bus) {
 		notifyListeners (data);
 	}
+
+	public void onStatusChange(int busStatus) {
+		setStatus (busStatus, true);
+	}
 	
 
 	/**
@@ -131,7 +138,8 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 			try {
 				waitForConnections ();
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				System.err.println( e1.toString() );
+				setStatus (DYNATAC_BUS_STATUS_CONNECTION_PROBLEM);
 			}
 		}
 		
@@ -145,7 +153,8 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 		try {
 			listener_ = new ServerSocket(myPort_);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println(e.toString());
+			setStatus (DYNATAC_BUS_STATUS_STARTING_FAILED);
 		}
 	}
 	
@@ -172,4 +181,5 @@ public class DynatacBusServerSocket extends DynatacBusCommon implements IDynatac
 	private ServerSocket listener_;
 	
 	private DynatacBusBridge myConnectedClients_;
+
 }
