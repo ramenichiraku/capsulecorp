@@ -24,4 +24,5 @@
 <fullyQualifiedTypeName name="Dynatac.Bus.IDynatacBus"/>
 <fullyQualifiedTypeName name="Dynatac.Bus.IDynatacBus.IDynatacBusListener"/>
 <fullyQualifiedTypeName name="java.net.Inet4Address"/>
+<fullyQualifiedTypeName name="java.net.InetAddress"/>
 </qualifiedTypeNameHistroy>

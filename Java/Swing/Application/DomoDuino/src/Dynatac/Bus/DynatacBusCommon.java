@@ -31,6 +31,7 @@ public abstract class DynatacBusCommon implements IDynatacBus {
 		if (!listeners_.contains(s))
 		{
 			listeners_.add(s);
+			s.onStatusChange(myStatus_);
 		}
 	}
 	

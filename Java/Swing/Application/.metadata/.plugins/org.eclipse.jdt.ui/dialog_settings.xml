@@ -35,8 +35,9 @@
 		<item value="false" key="jarOptionsWizardPage.STORE_USE_SRC_FOLDERS"/>
 		<item value="" key="jarOptionsWizardPage.DESCRIPTION_LOCATION"/>
 		<list key="JarPackageWizardPage.DESTINATION_NAMES_ID">
-			<item value="DomoDuino\lib\dynatac.jar"/>
+			<item value="DomoDuino/lib/dynatac-1.jar"/>
 			<item value="DomoDuino/lib/dynatac.jar"/>
+			<item value="DomoDuino\lib\dynatac.jar"/>
 		</list>
 	</section>
 	<section name="BuildPathsPropertyPage">
