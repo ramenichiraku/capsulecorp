@@ -3,26 +3,26 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="326" key="DIALOG_WIDTH"/>
 		<item value="62" key="DIALOG_Y_ORIGIN"/>
-		<item value="432" key="DIALOG_HEIGHT"/>
 		<item value="694" key="DIALOG_X_ORIGIN"/>
+		<item value="432" key="DIALOG_HEIGHT"/>
 		<item value="1|Sans|10.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="isRegEx"/>
 		<item value="true" key="casesensitive"/>
+		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wholeword"/>
-		<item value="DomoDuinoTest" key="selection"/>
+		<item value="connect" key="selection"/>
 		<list key="findhistory">
-			<item value="DomoDuino"/>
-			<item value="dataR"/>
-			<item value="install"/>
-			<item value="instal"/>
-			<item value="initia"/>
-			<item value="fina"/>
-			<item value="final"/>
-			<item value="startS"/>
+			<item value="connect"/>
+			<item value="close"/>
+			<item value="disconnect"/>
+			<item value="dataReady"/>
+			<item value="initialize"/>
+			<item value="streamInitializations"/>
+			<item value="clearStat"/>
+			<item value="streamIni"/>
 		</list>
 		<list key="replacehistory">
 			<item value="DomoDuinoTest"/>

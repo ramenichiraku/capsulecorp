@@ -82,22 +82,38 @@ public abstract class DynatacBusCommon implements IDynatacBus {
 	{
 		if (clearPreviously)
 		{
-			clearStatus();
+			clearStatus(false);
 		}
 
 		myStatus_ |= aStatus;
 		notifyStatus();
 	}
-
-	private void clearStatus()
+	
+	protected void clearStatus ()
 	{
-		clearStatus (0xffffffff);
+		clearStatus (true);
+	}
+
+	protected void clearStatus(boolean notify)
+	{
+		myStatus_ = 0;
+		
+		if (notify)
+		{
+			notifyStatus();
+		}
 	}
 	
+	int getStatus ()
+	{
+		return myStatus_;
+	}
+	
+	/*
 	protected void clearStatus(int aStatus)
 	{
 		myStatus_ &= ~aStatus;
-	}
+	}*/
 
 	protected boolean isSet (int aStatus)
 	{

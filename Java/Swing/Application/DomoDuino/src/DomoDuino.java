@@ -133,8 +133,26 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 		
 		String ipAddress = DynatacBusServerSocket.getIpAddress();
 		
+				
 		final IDynatacProtocolMaster master = configureMaster();
 		System.out.println("My address is: " + ipAddress);
+		
+		
+		// Create Serial and Socket buses
+		//
+		IDynatacBus [] busesList2 = 
+		{
+			new DynatacBusClientSocket ("192.168.1.7", 9090),
+			new DynatacBusServerSocket(9091)//,
+			//new DynatacBusSerial (aSerialPortName, new DynatacBusSerial_ConfigInfo())
+		};	
+		// Create master dynatac protocol
+		//
+		/*
+		IDynatacProtocolMaster dynatacMaster = new DynatacProtocol(
+				new DynatacBusBridge(busesList)
+				);
+		*/
 		
 				
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

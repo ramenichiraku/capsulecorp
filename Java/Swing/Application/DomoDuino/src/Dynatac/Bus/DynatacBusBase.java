@@ -44,6 +44,11 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 	 *  PUBLIC METHODS 						
 	 ****************************************/
 	public void write(String data) {
+		if ((getStatus() & DYNATAC_BUS_STATUS_UNAVAILABLE) != 0)
+		{
+			return;
+		}
+		
 		System.out.println("Sent: " + data);
 		try {
 			//output_.write(data.getBytes());
@@ -69,7 +74,7 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 	 */
 	protected boolean dataReady ()
 	{
-		if (isSet (DYNATAC_BUS_STATUS_NOT_INITIALIZED))
+		if ((getStatus() & DYNATAC_BUS_STATUS_UNAVAILABLE) != 0)
 		{
 			return true;
 		}
@@ -112,7 +117,7 @@ public abstract class DynatacBusBase extends DynatacBusCommon implements IDynata
 		output_ = new PrintStream (output);
 		input_  = new BufferedReader(new InputStreamReader(input));
 		
-		clearStatus(DYNATAC_BUS_STATUS_NOT_INITIALIZED);
+		clearStatus();
 	}
 
 

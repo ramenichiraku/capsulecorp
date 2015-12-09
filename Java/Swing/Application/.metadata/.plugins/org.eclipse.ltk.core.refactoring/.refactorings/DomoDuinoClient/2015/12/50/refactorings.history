@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring accessors="true" comment="Delete element from project &apos;DomoDuinoClient&apos;&#x0A;- Original project: &apos;DomoDuinoClient&apos;&#x0A;- Original element: &apos;dynatac-1.jar&apos;" description="Delete element" element1="lib/dynatac-1.jar" elements="0" flags="589830" id="org.eclipse.jdt.ui.delete" resources="1" stamp="1449574471346" subPackages="false" version="1.0"/>&#x0A;&#x0A;</session>

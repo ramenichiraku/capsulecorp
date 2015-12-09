@@ -43,10 +43,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <Button
-        android:id="@+id/btnLed"
+        android:id="@+id/btnHeaterOn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Toogle LED"/>
+        android:text="Switch Heater ON"/>
+    <Button
+        android:id="@+id/btnHeaterOff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Switch Heater OFF"/>
     <TextView
         android:id="@+id/temperature"
         android:layout_width="wrap_content"

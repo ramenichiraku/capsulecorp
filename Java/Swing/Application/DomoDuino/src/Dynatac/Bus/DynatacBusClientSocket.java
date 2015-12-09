@@ -3,12 +3,13 @@ package Dynatac.Bus;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 
 public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable {	
 	
 	/**
-	 * Construictor 
+	 * Constructor 
 	 * 
 	 * @param addr to connect to
 	 * @param port to connect to
@@ -16,6 +17,8 @@ public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable 
 	public DynatacBusClientSocket (String addr, int port) {
 		remoteAddr_ = addr;
 		remotePort_ = port;
+		
+		new Thread (this).start();
 	}
 
 	/**
@@ -26,17 +29,21 @@ public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable 
 	 * 
 	 * @throws IOException when could not connect
 	 */
-	private void connect (String addr, int port) throws IOException
+	private void connect (String addr, int port)
 	{
-		InetAddress serverAddr  = InetAddress.getByName(addr);
-
-		socket_ = new Socket (serverAddr, port);
-		
-		if (socket_ != null)
-		{		
-			streamInitializations (socket_.getInputStream(),socket_.getOutputStream());
+		try {
+			InetAddress serverAddr = InetAddress.getByName(addr);
 			
-			new Thread (this).start();
+			socket_ = new Socket (serverAddr, port);
+			
+			streamInitializations (socket_.getInputStream(),socket_.getOutputStream());
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			setStatus (DYNATAC_BUS_STATUS_STARTING_FAILED);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			setStatus (DYNATAC_BUS_STATUS_STARTING_FAILED);
 		}
 	}
 	
@@ -58,28 +65,21 @@ public class DynatacBusClientSocket  extends DynatacBusBase implements Runnable 
 	 * Thread to get new input information
 	 */
 	public void run() {
-		initialize ();
+		connect (remoteAddr_, remotePort_);
 		
-		while (!Thread.currentThread().isInterrupted())
+		while (!Thread.currentThread().isInterrupted() && ((getStatus() & DYNATAC_BUS_STATUS_UNAVAILABLE) == 0))
 		{
 			dataReady();	
 		}
 		
+		close();		
 		//
 	}
 
 	/**
 	 * Common method to initialize
 	 */
-	protected void initialize() {
-		try {
-			connect (remoteAddr_, remotePort_);
-		} catch (IOException e1) {
-			System.err.println(e1.toString());
-			setStatus (DYNATAC_BUS_STATUS_STARTING_FAILED);
-		}
-	}
-	
+		
 	/**
 	 * Common method to end up
 	 */
