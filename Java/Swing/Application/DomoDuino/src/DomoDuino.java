@@ -71,7 +71,7 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 		
 		// Get serial port where arduino is connecte
 		//
-		/*
+		
 		List<String> detectedSerialPorts = DynatacBusSerial.scanPorts();
 		String aSerialPortName = "";
 		System.out.println("Existing serial ports: "+ detectedSerialPorts.size());
@@ -82,7 +82,7 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 			System.out.println("Serial port "+ i + " named: " + name);
 			if (
 					name.equals("/dev/tty.usbserial-A9007UX1") // Mac OS X
-			 ||     name.equals("/dev/ttyACM0") // Raspberry Pi
+		//	 ||     name.equals("/dev/ttyACM0") // Raspberry Pi
 			 ||     name.equals("/dev/ttyUSB0") // Linux
 			 ||     name.equals("COM3") // Windows 
 			 )
@@ -102,7 +102,7 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 			System.out.println("Using port: "+ aSerialPortName);
 			
 		}
-		*/
+		
 		// Get port where start listening server
 		//
 		int serverPort = 9090;
@@ -113,8 +113,8 @@ public class DomoDuino extends JFrame implements IDynatacProtocolMasterSuscripto
 		//
 		IDynatacBus [] busesList = 
 			{
-				new DynatacBusServerSocket(serverPort)//,
-				//new DynatacBusSerial (aSerialPortName, new DynatacBusSerial_ConfigInfo())
+				new DynatacBusServerSocket(serverPort),
+				new DynatacBusSerial (aSerialPortName, new DynatacBusSerial_ConfigInfo())
 			};
 		
 

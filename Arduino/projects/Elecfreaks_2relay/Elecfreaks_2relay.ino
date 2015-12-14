@@ -28,7 +28,7 @@ const static int EVENTO_ONOFF             = 0;
 
 // Select SERIAL channel (Serial or XBee)
 //
-#define SERIAL_IS_XBEE 0
+#define SERIAL_IS_XBEE 1
 
 
 // Local pins
@@ -106,5 +106,6 @@ void andale (int c,int d)
   if (c == COMMAND_ONOFF)
   {
     digitalWrite (pinRelay1, d==0?0:1);
+    frame_.sendEvent (EVENTO_ONOFF, d==0?0:1);
   } 
 }

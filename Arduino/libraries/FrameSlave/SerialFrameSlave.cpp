@@ -34,7 +34,7 @@ SerialFrameSlave::~SerialFrameSlave ()
 boolean SerialFrameSlave::sendEvent (int id, int data)
 {
   String myEvent = "e;" + String(id)+";"+String(data);
-  Serial.println (myEvent);
+  serial_->println (myEvent);
 }
 
 // Command suscriptions
